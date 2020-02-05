@@ -1,0 +1,8 @@
+a:
+smallest:3734
+largest:78736
+b:
+brightest:-22.7668247 54610
+faintest:-17.581007 3734
+c:Yes,because the higher recession velocity the star have, the lower energy the detetor can receive. These date show that almost all of stars have high
+recession velocity have low Absoluatr Magnitude.

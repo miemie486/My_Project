@@ -1,0 +1,6 @@
+tauP>>tauD
+先上升后下降
+tauP约等于tauD
+几乎不变
+tau<<tauD
+上升

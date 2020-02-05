@@ -1,0 +1,1 @@
+当h>12|f''(x)/f'''(x)|时，forward difference的误差小于central difference的误差。

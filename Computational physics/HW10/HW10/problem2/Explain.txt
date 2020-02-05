@@ -1,0 +1,5 @@
+Yes, the result agree with expectations.
+If I want to calculate this integral to an approximate accuracy of 10^(-10),
+Trapezoidal rule need iterate 21 times and spend about 3 seconds.
+But if I use the Simpson's method, program just need iterate 11 times 
+and about 10^-2 seconds. 
