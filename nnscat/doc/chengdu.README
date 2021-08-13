@@ -1,0 +1,24 @@
+
+# Generate objs and example show_mtrx
+$ make -f chengdu.Makefile
+
+# Run show_mtrx to make sure everything works
+$ ./show_mtrx
+  -5.4930063031814851E-003  -2.1493311741085529E-006  -2.1493311741085529E-006   3.3236093851612218E-010
+  -4.5111478210446655E-003  -2.1493311787390851E-006  -2.1493311787390851E-006   3.3236093923216265E-010
+  -4.5111478210446655E-003  -2.1493311787390851E-006  -2.1493311787390851E-006   3.3236093923216265E-010
+  -1.4395256432024510E-003  -2.1493311840026715E-006  -2.1493311840026715E-006   3.3236094004609513E-010
+   2.9166702198884266E-003  -2.1493311848883711E-006  -2.1493311848883711E-006   3.3236094018305494E-010
+ chengdu_MMWLY_400, 1S0
+  -4.6329911842432295E-003   0.0000000000000000        0.0000000000000000        0.0000000000000000
+ chengdu_MMWLY_600, 1S0
+  -3.9012804796997097E-003   0.0000000000000000        0.0000000000000000        0.0000000000000000
+  -3.5372739979997849E-003   0.0000000000000000        0.0000000000000000        0.0000000000000000
+
+* Check out the sample code show_mtrx.f90 for usage of routines of chengdu.f90
+
+* While compiling your code, you may need to include chengdu.mod and *.o generated in the previous compilation.
+
+* For notes on physics, see the comments in chengdu.f90.
+   !!! Please pay special attention to normalization of the partial-wave matrix elements, which are larger by a factor of mN than most conventions. !!!
+

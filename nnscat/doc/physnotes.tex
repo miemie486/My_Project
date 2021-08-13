@@ -1,0 +1,138 @@
+% \documentclass[aps, 11pt, superscriptaddress]{revtex4}
+\documentclass{article}
+
+\usepackage[usenames]{color}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{verbatim}
+\usepackage{cancel}
+
+\begin{document}
+
+\title{Physics-related Notes on NNscat}
+
+\author{The Effective Group}
+% \affiliation{Center for Theoretical Physics, Department of Physics, Sichuan University, 29 Wang-Jiang Road, Chengdu, Sichuan 610064, China}
+
+\date{January 26, 2018}
+
+\maketitle
+
+{\bf General remarks:}
+\begin{itemize}
+    \item All the conventions explained here should also be shown in the comments of relevant source files. If there is inconsistency between the source comments and these notes, follow the source comments.
+\end{itemize}
+
+\section{Units}
+Unless specified otherwise, the unit is MeV or MeV$^{-1}$.
+
+\section{Normalization}
+
+\subsection{Modules}
+
+\verb;nneft_lsesv;:
+
+The uncoupled-channel, full off-energy-shell Lippmann-Schwinger equation reads
+\begin{equation}
+    T(p', p; k) = V(p', p; k) + \int^\Lambda_0 dq\, q^2\, V(p', q; k)\, \frac{T(q, p; k)}{k^2 - q^2 + i\epsilon} \, ,\label{eqn_uncpled_lse}
+\end{equation}
+Note that the trivial dependence on the reduced mass $\mu$ has been absorbed into $V$ and $T$. Now we wish to determine the normalization factor of $T(k, k; k)$ in connection to the more conventional partial-wave amplitude $f(k)$,
+\begin{equation}
+    f(k) = \frac{1}{k\cot \delta - ik} = \frac{e^{i\delta} \sin \delta}{k} \, ,\label{eqn_f}
+\end{equation}
+where $\delta$ is the phase shift at $k$. This can be done by the following ``on-shell'' approximation
+\begin{equation}
+    \frac{1}{k^2 - q^2 + i\epsilon} = \frac{\mathcal{P}}{k^2 - q^2} - i\pi \delta(k^2 - q^2) \to - i\pi \delta(k^2 - q^2) \, ,
+\end{equation}
+which leads us to rewrite Eq.~\eqref{eqn_uncpled_lse} as follows
+\begin{equation}
+    T(k, k; k) = -\frac{2}{\pi} \frac{1}{\frac{-2}{\pi V(k, k; k)} - ik} \, .
+\end{equation}
+Comparing the above equation with Eq.~\eqref{eqn_f}, one finds the sought normalization of $T$:
+\begin{equation}
+    T(k, k; k) = -\frac{2}{\pi} f(k) = - \frac{2}{\pi} \frac{e^{i\delta} \sin \delta}{k} \, .
+\end{equation}
+Note that the ``on-shell'' approximation is \emph{not} used in the code.
+
+\verb;ope_pwd_lbw;:
+
+\begin{equation}
+    U_T = V_T + (4I - 3)W_T
+\end{equation}
+For one-pion-exchange (OPE),
+\begin{equation}
+    W_T(q^2) = \frac{2m_N}{\pi} \frac{1}{8\pi} \frac{g_A^2}{4f_\pi^2} \frac{1}{\vec{q}\,^2 + m_\pi^2} \, .
+\end{equation}
+
+\verb;OPE_j0j(j, p, k); $= \langle j0j; p | V_{OPE} | j0j; k \rangle$ and
+\begin{equation}
+    \langle j0j; p | V_{OPE} | j0j; k \rangle = \int_{-1}^{1} dz\, q^2\, U_T(q^2) P_j(z) \, ,
+\end{equation}
+with $q^2 \equiv p^2 + k^2 - 2pk z$ and $P_j(z)$ are the Legendre functions.
+
+\subsection{Signs of $T$ and $V$ in various references}
+% {\bf Signs of $T$ and $V$ in various references}:
+
+Reference~\cite{Kaiser:1997mw} uses the same sign convention for the transition operator $\mathcal{T}$ as in many QFT texts, e.g., Ref.~\cite{Peskin:1995ev}:
+\begin{equation}
+    \mathcal{S} = 1 + i \mathcal{T} \, .
+\end{equation}
+However, in the code and many texts on nonrelativistic quantum scattering theory, $T$ is used, which has opposite sign to $\mathcal{T}$, apart from other positive, normalization factors like $m_N/2\pi$, etc. The sign and normalization of $T$ is determined in its relation to $V$:
+\begin{equation}
+    T = V + TG_0 V\, ,
+\end{equation}
+where $V$ is interpreted, at least at LO in chiral EFT, as the potential energy; therefore, the sign of $V$ is fixed empirically by phenomenology of nuclear forces.
+
+For instance, using the sign convention of Ref.~\cite{Kaiser:1997mw}, the amplitude of OPE is given by
+\begin{equation}
+\begin{split}
+    & \langle \vec{p}_1\,', s_{z1}\,', I_{3}^{(1)}\,' ; \vec{p}_2\,' , s_{z2}\,', I_{3}^{(2)}\,' |\mathcal{T} |\vec{p}_1, s_{z1}, I_{3}^{(1)} ; \vec{p}_2 , s_{z2}, I_{3}^{(2)} \rangle \\
+    & \qquad = \frac{g_A^2}{4f_\pi^2} \bm{\tau}_1 \cdot \bm{\tau}_2 \frac{\vec{q}\cdot\vec{\sigma}_1  \vec{q}\cdot\vec{\sigma}_2}{\vec{q}\,^2 + m_\pi^2} \, ,
+\end{split}
+\end{equation}
+whereas
+\begin{equation}
+    V = - \frac{g_A^2}{4f_\pi^2} \bm{\tau}_1 \cdot \bm{\tau}_2 \frac{\vec{q}\cdot\vec{\sigma}_1  \vec{q}\cdot\vec{\sigma}_2}{\vec{q}\,^2 + m_\pi^2} \, .
+\end{equation}
+
+\subsection{Phase shift to S-Matrix}
+The are at least two different kinds of phase shift parameterizations. In the code, it is "Stapp" parameterization. The $\delta_1$ and $\delta_2$ are two coupled phase shift, the $\epsilon$ is mixing angle.
+
+\verb;eft_phaseconv;:
+
+\begin{equation}
+S= {\left( \begin{array}{cc}
+\cos(2\epsilon) \exp(2i\delta_1) & i\sin(2\epsilon)\exp[i(\delta_1 + \delta_2 )]\\
+i\sin(2\epsilon)\exp[i(\delta_1 + \delta_2 )] & \cos(2\epsilon) \exp(2i\delta_2)
+\end{array} \right)  }
+\end{equation}
+
+
+
+
+
+\begin{thebibliography}{99}
+
+\bibitem{Kaiser:1997mw}
+  N.~Kaiser, R.~Brockmann and W.~Weise,
+  %``Peripheral nucleon-nucleon phase shifts and chiral symmetry,''
+  Nucl.\ Phys.\ A {\bf 625}, 758 (1997)
+  % doi:10.1016/S0375-9474(97)00586-1
+  [nucl-th/9706045].
+  %%CITATION = doi:10.1016/S0375-9474(97)00586-1;%%
+  %318 citations counted in INSPIRE as of 27 Jan 2018
+
+\bibitem{Peskin:1995ev}
+  M.~E.~Peskin and D.~V.~Schroeder,
+  ``An Introduction to quantum field theory,''
+  %%CITATION = INSPIRE-407703;%%
+  %1081 citations counted in INSPIRE as of 27 Jan 2018
+
+\end{thebibliography}
+
+
+\end{document}

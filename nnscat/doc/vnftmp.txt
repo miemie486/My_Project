@@ -1,0 +1,31 @@
+
+
+1. In eft/vnftmp_pwd.f90, add partial-wave matrix elements of certain forces,
+such as delta-ful TPEs, relativistic corrections to OPE, etc.
+
+2. In channel/mod_vfunc_vnftmp.f90, add Vfunc_VNF_sngl and Vfunc_VNF_cpld or
+similarly named subs that take VNF_j0j, VNF_j1j, etc. as inputs and act on
+obj_sngl and obj_cpld, respectively.
+
+3. In channel/mod_obj_pope_vnfsngl.f90, Vfunc_VQ2_pope_vnfsngl uses
+Vfunc_VNF_sngl as inputs. So, if you change the name of Vfunc_VNF_sngl in
+mod_vfunc_vnftmp.f90, you must change the code of Vfunc_VQ2_pope_vnfsngl.
+
+4. In nnscat/, run the following command to compile the code
+
+$ make
+
+5. If the code is compiled successfully, the target executable will be bin/get_vnfperi. get_vnfperi can generate NLO, N2LO phase shifts for 1D2 and 3D2. The source of get_vnfperi is in exec/. Be sure to check out the source to know the usage of get_vnfperi.
+
+6. Go to, for example, jobs/1d2, and prepare the following two input files for get_vnfperi
+
+run_klist.in : The list of kcm's at which get_vnfperi will compute phase shifts.
+inputs_1d2.in : The list of Lambda's, momentum cutoff values, typically 500 ~ 9000
+
+Then, run get_vnfperi as follows
+
+$ ../../bin/get_vnfperi 1d2 2 nofxk
+
+It will put out phase shifts for each Lambda that is in inputs_1d2.in. The structure of data is self-explanatory.
+
+7. Use gnuplot to plot two curves on a single plot, NLO phase shift vs. kcm and NNLO phase shift vs. kcm

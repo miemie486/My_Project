@@ -1,0 +1,11 @@
+*#
+*.o
+*.mod
+test.f90
+exe
+rel_info
+*.out
+run_klist.in
+jobs
+*.orig
+*.tar.gz

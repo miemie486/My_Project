@@ -1,0 +1,17 @@
+* Linux
+
+# Extract the minuit tar ball
+$ tar -zxvf minuit.tar.gz
+
+# A new directory build_minuit/ should be made. Go there.
+cd build_minuit/
+
+# Run make
+$ make
+
+# If compiled successfully, libminuit.a will be generated. Make sure it exists
+# in current director.
+$ ls libminuit.a
+
+# Make another copy with a different name and put the copy in /usr/local/lib
+$ sudo cp libminuit.a /usr/local/lib/libminuitgf.a

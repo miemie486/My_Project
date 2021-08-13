@@ -1,0 +1,9 @@
+*.aux
+*.log
+*.pdf
+*.o
+*.mod
+test.f90
+exe
+rel_info
+*sublime*

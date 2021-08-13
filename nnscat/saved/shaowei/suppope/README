@@ -1,0 +1,24 @@
+# Bingwei Long and Shaowei Wu (Mar 23, 2019)
+# Bingwei Long (Mar 11, 2019 4pm)
+# Shaowei Wu  (Mar 11, 2019 3pm)
+
+* Power counting of suppressed TPEs (or the natural scenario) is used.
+
+* 同名文件末尾的数字不代表uptoQn值，仅仅是标记作用。
+
+* set2, set3, etc. refers to the label of ci's used by the subleading TPE. See src/pots/tpe1.f90 and src/pots/mod_deltafullN2LO_pwd.f90 for more information.
+
+* 对于同一目录下同名文件的说明：
+在一个文件夹，例如 /saved/shaowei/suppope/set2/中，会出现后缀为数字的同名文件，例如：
+
+3p0_GetPOPESngl_fitpwa_0.log
+3p0_GetPOPESngl_fitpwa_1.log
+3p0_GetPOPESngl_fitpwa_2.log
+
+这些文件对应同一个分波3P0的拟合，按照末尾数字依次增加分别表示从“有输入参数开始”不同uptoQn对应的参数。
+例如，对于3P0，在uptoQn=1时不需要输入参数，因此不存在对应的log文件。而uptoQn=2开始需要1个参数，那么3p0_GetPOPESngl_fitpwa_0.log就是记录输入参数的文件。
+3p0_GetPOPESngl_fitpwa_0.log有3列，分别为Mambda数值，输入参数值（1个），fcn值，fcn是我做的拟合结果的chisqr，只是用于衡量拟合效果，无需留意。
+在uptoQn=3时，需要2个输入参数，但是3p0_GetPOPESngl_fitpwa_1.log仅仅有3列，使用时，应当把3p0_GetPOPESngl_fitpwa_0.log的参数也考虑进去，也就是说，3p0_GetPOPESngl_fitpwa_0.log（1个参数）和3p0_GetPOPESngl_fitpwa_1.log（1个参数）的参数都需要作为输入参数（一共2个参数）。
+以此类推，在uptoQn=3时，需要输入4个参数，于是分别将3p0_GetPOPESngl_fitpwa_0.log，3p0_GetPOPESngl_fitpwa_1.log，3p0_GetPOPESngl_fitpwa_2.log的参数按顺序输入即可（分别有1，1，2个，一共4个）。
+
+

@@ -1,0 +1,31 @@
+
+- Rewrite check_f90makefile.py
+
+- Is flag self%TQn_updated still useful?
+
+- All class variables should be intent(inout) instead of intent(in)
+
+- (Done!) Check the mechanism of checking unitarity is in functioning.
+
+- A better way to manage physical constants.
+
+- Add code to compute deuteron wave function.
+
+- (Done!) Check all code styled as “self%obj_parent%method”. Decide whether to change
+  them to “call method_parent(self)”.
+
+- (Done!) Change the loop-index order so that the inner-most loop-index operates on
+  the left-most array index. E.g.
+
+  do jj = 1, N2
+      do ii = 1, N1
+          “works on A(ii, jj)”
+      end do
+  end do
+
+- (Done!) Merge load_Cs method with load_inputs
+
+- (Done!) Change get_num_cnttrm_* to get_num_paras_*
+  (Done!) Change get_cnttrm_filename_* to get_paras_filename_*
+
+- (Done!) Change "kmatrix" to "kcotd"

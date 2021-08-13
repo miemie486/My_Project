@@ -1,0 +1,75 @@
+
+\\\*** Directories ***///
+
+Source:
+
+def/        : General definitions
+util/       : Utility modules
+eft/        : Modules for chiral EFT physics, loop calculations, LS equation
+              solvers, etc.
+exec/       : Executables
+fitexec/    : Only executables for fitting
+channel/    : Modules for obj_channel and its descendants
+drv/        : Driver subroutines to generate phase shifts
+
+Binary:
+
+mod/        : Output directory for .mod
+obj/        : Output directory for .obj
+bin/        : Output directory for executables
+
+Auxiliary:
+
+scripts/    : Python and/or shell scripts for various purposes
+extlibs/    : Source or binary packages for external libraries
+saved/      : Saved values for fitting parameters
+
+
+\\\*** Class tree ***///
+
+obj_channel
+|
++->obj_sngl
+|  |
+|  +->obj_withc0_sngl
+|  |  |
+|  |  +->obj_1s0LY
+|  |  |  |
+|  |  |  +->obj_lbwdib
+|  |  |  |
+|  |  |  +->obj_1s0SYLV
+|  |  |  |
+|  |  |  +->obj_1s0_mpistar_sngl
+|  |  |
+|  |  +->obj_tlrLY
+|  |  |
+|  |  +->obj_withc0_residual_sngl
+|  |
+|  +->obj_pope_sngl
+|  |
+|  +->obj_prcpope_sngl
+|
++->obj_cpld
+   |
+   +->obj_withc0_cpld
+   |
+   +->obj_pope_cpld
+      |
+      +->obj_altpope_cpld
+      |
+      +->obj_prcpope_cpld
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

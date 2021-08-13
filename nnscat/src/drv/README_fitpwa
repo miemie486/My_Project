@@ -1,0 +1,26 @@
+- Bingwei Long 03/23/2019
+
+Phase shifts by the Chengdu potential
+
+* Check drv_fitpwa for detailed usage of specific subroutines, such as how many
+parameters are needed at certain order
+
+* The path is where input parameters can be found for the corresponding subroutine
+
+* Only 1S0, 3S1-3D1, and 3P0 contribute to LO
+
+  Name of subroutines               Path of parameter files
+1S0:
+  Getspr1s0_smpl_fitpwa             saved/spr1s0/fitspr_Q2_800.arx
+3S1-3D1:
+  GetNPCpld_fitpwa                  saved/3s1/fit3s1_Q2_rslt.arx
+3P0:
+  GetNPWithC0Sngl_fitpwa            saved/3p0/fit3p0_Q2_rslt.arx
+
+* Other channels vanish at LO, but start to contribute at NLO, including
+
+  uncoupled channels:
+    GetPOPESngl_fitpwa              saved/shaowei/suppope/set2/
+
+  coupled channels:
+    GetPOPECpld_fitpwa              saved/shaowei/suppope/set2/
