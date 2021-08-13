@@ -1,0 +1,17 @@
+*.xlsx
+*.xls
+*.o
+*.exe
+bin/
+obj/
+saved/
+jobs/
+.vscode/
+*_origin.cpp
+*_origin.h
+test/
+*_copy.cpp
+*copy*
+*test*
+*sublime*
+*.BAK

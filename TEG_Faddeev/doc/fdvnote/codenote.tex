@@ -1,0 +1,691 @@
+% \documentclass[12pt]{article}
+% \documentclass[11pt,draft,aps]{revtex4}
+\documentclass[11pt,aps]{revtex4}
+
+\usepackage{bbm}
+% \usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{comment}
+% \usepackage{listings}
+% \usepackage{indentfirst}
+% \usepackage{braket}
+% \usepackage{authblk}
+% \usepackage{hyperref}
+% \setlength{\parindent}{2em}
+\usepackage{color}
+% \geometry{left=2.5cm,right=2.5cm,top=2.0cm,bottom=2.0cm}
+% About the author
+% \renewcommand*{\Authand}{, }
+% \renewcommand\Affilfont{\itshape\small}
+% \lstset{language=C}
+\newcommand{\PF}{{\color{red}f}}
+\newcommand{\cor}[1]{{\color{blue} #1 }}
+\newcommand{\orig}[1]{{\color{red} #1 }}
+\newcommand{\lbwcmt}[1]{{\bf\color{magenta} #1 }}
+\newcommand{\cmplx}[1]{{\color{red} #1 }}
+% \newcommand{\cor}[2]{}
+% \setcounter{Maxaffil}{0}
+
+\begin{document}
+
+\date{January 26, 2021}
+
+\title{Notes on TEG Faddeev code}
+
+\author{Zeyuan Ye}
+\affiliation{Department of Physics, Sichuan University}
+\author{Bingwei Long}
+\affiliation{Department of Physics, Sichuan University}
+\author{Kaifei Ning}
+\affiliation{Department of Physics, Sichuan University}
+\author{Yang Ye}
+\affiliation{Department of Physics, Sichuan University}
+
+\maketitle
+
+\section{Construct all possible channels}
+In counting all possible channels of a three-body system, only four criteria are necessary,
+
+\begin{itemize}
+\item{Quantum numbers fulfill the triangular relations}
+\item{The parity}
+\item{The system is antisymmetric}
+\end{itemize}
+
+which correspond to the following four formula,
+
+\begin{itemize}
+\item{Depends on what kind of coupling sequence you are using. In here, the
+    sequence in book The Quantum Mechanical Few-Body Problem (Walter Gl\"ockle's,
+    1983, p. 159) is prefered. In other words, two
+    particles coupled into a pair and than couple with the third one.}
+\item{$l+\lambda = \text{parity}$}
+\item{$l + s + t = \text{odd}$}
+\end{itemize}
+
+Where $l, s, t$ means the pair's orbital angular, spin and isospin. $\lambda$ is
+the orbital angular momentum of the third particle.
+Also there should have a limitation of the order of the partial waves $j_{max}$,
+where $j$ is the total angular momentum of the pair.
+
+If you follow the sequence of Glockle's book, the following quantum numbers need
+to be specified,
+\begin{center}
+\begin{tabular}{ | c  c  c c c c c c|}
+\hline
+l & s & j & $\lambda$ & $I$ & t & $\mathcal{T}$ & $\mathcal{J}$ \\
+\hline
+\end{tabular}
+\end{center}
+Where I is the total angular momentum of the third particle, t is the total
+isospin of the pair and $\mathcal{T}$ is the total isospin of the system.
+
+Channels are stored in the form,
+\begin{center}
+\begin{tabular}{ | c  c  c c c c c c|}
+\hline
+l & s & j & $\lambda$ & $I$ & t & $\mathcal{T}$ & $\mathcal{J}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+With this order, one can think of them as a number with different quantum
+numbers represents different digits (although some digits are double). The smallest of the number is labeled as
+$\alpha = 1$, the next up will be 2, and so on. For example, set \{l, s, j, $\lambda$, $I$, t, $\mathcal{T}$, $\mathcal{J}$\} = \{1, 1, 1, 1, 2, 0.5, 0.5,
+1.5\} is smaller than \{1, 2, 0.5, 1, 2, 0.5, 0.5, 1.5\}. Therefore the former
+is labeled as $\alpha = 1$.
+
+
+\section{Homogeneous Faddeev equation}
+
+Concerning Elster's lecture note on the homogeneous Faddeev equation.
+
+\begin{itemize}
+\item \textbf{Meaning of the quantum numbers in the table in p74}
+
+  $\alpha$: channel label
+
+  $l$: orbital momentum of the pair
+
+  $s$: spin of the pair
+
+  $j$: total momentum of the pair
+
+  $t$: total isospin of the pair
+
+  $\lambda$: orbital momentum of the third particle
+
+  $I$: ($\frac{1}{2}\, \lambda$) spin-orbit coupled angular momentum of the third particle
+
+  $\mathcal{J}$: total angular momentum of three particles
+
+  $\mathcal{M}$: $z$-component of total angular momentum
+
+  $\mathcal{T}$: total isospin of three particles
+
+  $\mathcal{M}_T$: 3rd component of total isospin
+
+
+\end{itemize}
+\begin{equation}
+  | p q \alpha \rangle \equiv | pq\; (ls)j\; (\lambda \frac{1}{2}) I\; \mathcal{J} \mathcal{M}\; (t \frac{1}{2}) \mathcal{T} \mathcal{M}_T \rangle \, ,
+\end{equation}
+where, e.g., $(ls) j$ indicates that $l$ and $s$ couple up to form $j$. In the code, however, $\mathcal{M}$ and $\mathcal{M}_T$ are not part of $\alpha$
+\begin{equation}
+  \alpha = \{(ls)j\; (\lambda \frac{1}{2}) I\; \mathcal{J}\; (t \frac{1}{2}) \mathcal{T} \} \label{eqn-defalpha}
+\end{equation}
+
+\textbf{Equation (3.65)}
+\begin{equation}
+  \begin{aligned}
+  % & \psi_{\alpha}(p, q) = \frac{1}{E - \frac{p_{k}^2}{m_N} - \frac{3}{4m_N}q_r^2} \sum_{l'}\sum_{\alpha''} \int_0^\infty dq'' {q''\,}^2 \\
+  % & \times \int_{-1}^1{dx} \, t_{ll'}^{sjt} \left(p, \pi_1, E - \frac{3}{4m_N}q^2\right) \frac{G_{\bar{\alpha}\alpha''}(q_r, q_n, x)}{\pi_1^{l'} \, \pi_2^{l''} } \psi_{\alpha''}(\pi_2, q'') \, ,
+  & \psi_{\alpha}(p, q) = \frac{1}{E - \frac{p_{k}^2}{m_N} - \frac{3q_r^2}{4m_N}} \sum_{l'}\sum_{\alpha''} \int_0^\infty dq'' {q''\,}^2 \\
+  & \times \int_{-1}^1{dx} \; t_{ll'}^{sjt} (p, \pi_1, E - \frac{3q^2}{4m_N})\, \frac{G_{\bar{\alpha}\alpha''}(q, q'', x)}{\pi_1^{l'} \, \pi_2^{l''} } \psi_{\alpha''}(\pi_2, q'') \, ,
+  \end{aligned}
+\end{equation}
+where
+\begin{equation}
+\begin{split}
+  \pi_1 &= \left(\frac{q^2}{4} + {q''}^2 + q q'' x \right)^{\frac{1}{2}}\, , \\
+  \pi_2 &= \left(q^2 + \frac{{q''}^2}{4} + q q'' x \right)^{\frac{1}{2}} \, .
+\end{split}
+\end{equation}
+
+\textbf{Equation (3.67)}
+\begin{equation}
+  \begin{aligned}
+  & \psi_{\alpha}(p_{k}, q_r) = \frac{1}{E - \frac{p_{k}^2}{m_N} - \frac{3q_r^2}{4m_N}} \\
+  & \times \sum_{l'}\sum_{\alpha''}\sum_{n} \omega_{n} q_n^2 \int_{-1}^1{dx} \sum_i t_{ll'}^{sjt}\left(p_k, p_i, E - \frac{3q_r^2}{4m_N}\right) \\
+  & \times \frac{S_i(\pi_1)}{\pi_1^{l'}}G_{\bar{\alpha}\alpha''}(q_r, q_n, x) \sum_m \frac{S_m(\pi_2)}{\pi_2^{l''}} \psi_{\alpha''}(p_m, q_n) \, .
+  \end{aligned}
+\end{equation}
+$l'$ and $\bar{\alpha}$ need to be explained. If the two-body subsystem of channel $\alpha$ is uncoupled, $l'$ is precisely $l$ that is defined by $\alpha$, and $\bar{\alpha} = \alpha$.
+% \begin{equation}
+%   \bar{\alpha} = \alpha \, .
+% \end{equation}
+For instance, if channel $\alpha$ has $^3P_1$ as its two-body subsystem, $l' = l = 1$.  $   = \alpha$. If the subsystem is coupled, $l'$ runs over two values: $l$ and $l + 2$ or $l - 2$. For example, $^3S_1 - {}^3D_1$ is coupled. So if channel $\alpha$ has $^3S_1$ as its subsystem, $l'$ runs over $0$ and $2$. $\bar{\alpha}$ has the same set of quantum numbers as $\alpha$ except that the pair orbit of $\bar{\alpha}$ is given by $l'$:
+\begin{equation*}
+  \bar{\alpha} = \bar{\alpha}(\alpha, l') \, .
+\end{equation*}
+Therefore, (1) summing over $l'$ implies summing over $\bar{\alpha}$ and (2) $\bar{\alpha} = \alpha$ for uncoupled two-body subsystems.
+
+% the pair orbital of $\alpha$'s partner. For example, $^3S_1 - {}^3D_1$ is coupled, so $^3D_1$ is $^3S_1$'s partner. When channel $\alpha$ has $^3S_1$ (or $^3D_1$) as its two-body subsystem, then $l'$ runs over 0 and 2. When channel $\alpha$ has uncoupled two-body partial wave, $l'$ is the orbit of that partial wave. E.g., for $^3P_1$, $l'$ takes only value of $1$.
+
+\section{Complex contours}
+Complex contour:
+\begin{equation}
+  q \to q e^{-i\phi}\, , \quad p \to p e^{-i\phi}\, , \quad \pi \to \pi e^{-i\phi}\, .
+\end{equation}
+Let
+\begin{equation}
+  \begin{split}
+    \PF &\equiv e^{-i\phi}\, , \\
+    \widetilde{\psi}(p, q, \alpha) & \equiv \psi_\alpha(\PF p, \PF q) \, , \\
+    \widetilde{t}_{ll'}\left(p, \pi, E_2\right) & \equiv t_{ll'}^{sjt}\left(\PF p, \PF \pi, E_2\right) \, ,
+  \end{split}
+\end{equation}
+where $p$, $q$, and $\pi$ are still real and positive, the two-body CM energy $E_2$ is complex. For compactness of the notation, we have removed the superscript ``$sjt$'' from $\widetilde{t}_{ll'}$. When $f = 1$, we are back to the real integration.
+
+\begin{equation}
+\begin{split}
+  \widetilde{\psi}(p_{k}, q_r, \alpha) &= \frac{\PF^3}{E - \PF^2 \left(\frac{p_{k}^2}{m_N} + \frac{3}{4m_N}q_r^2 \right)} \\
+  & \quad \times \sum_m \sum_{n} \sum_{\alpha''} \, \Bigg{[} \omega_{n} q_n^2 \sum_{l'} \sum_i  \widetilde{t}_{ll'}(p_k, p_i, E - \PF^2 \frac{3}{4m_N}q_r^2)  \\
+  & \quad \times \int_{-1}^1{dx}\,  \frac{S_i(\pi_1)}{(\PF\pi_1)^{l'}}\, G_{\bar{\alpha}\alpha''}(\PF q_r, \PF q_n, x)  \frac{S_m(\pi_2)}{(\PF\pi_2)^{l''}} \Bigg{]} \, \widetilde{\psi}(p_m, q_n, \alpha'') \\
+  \text{define matrix K such that} \\
+  0 & = \sum_m \sum_{n} \sum_{\alpha''} K\left(kr\alpha;\, mn\alpha''\right) \, \widetilde{\psi}(p_m, q_n, \alpha'')
+  % & \times \int_{-1}^1{dx} \frac{S_i(\pi_1)}{\pi_1^{l'}}G_{\bar{\alpha}\alpha''}(q_r, q_n, x)  \frac{S_m(\pi_2)}{\pi_2^{l''}}
+\end{split}
+\end{equation}
+% \left(\PF^{-l'}\right)
+
+In the code, an intermediate quantity is introduced:
+\begin{equation}
+  \texttt{intz\_Hmgns}\left(\bar{\alpha}, \alpha''; q_r, q_n; p_i, p_m\right) = \int_{-1}^1{dx}\, G_{\bar{\alpha}\alpha''}\left(\PF q_r, \PF q_n, x\right) \frac{S_i(\pi_1)}{(\PF \pi_1)^{l'}}
+  \frac{S_m(\pi_2)}{(\PF \pi_2)^{l''}} \, ,
+\end{equation}
+where
+\begin{equation}
+\begin{split}
+  \pi_1(x) &= \pi_1(q_r, q_n, x) = \left(\frac{q_r^2}{4} + q_n^2 + q_r q_n x \right)^{\frac{1}{2}}\, , \\
+  \pi_2(x) &= \pi_2(q_r, q_n, x) = \left(q_r^2 + \frac{q_n^2}{4} + q_r q_n x \right)^{\frac{1}{2}} \, . \label{eqn_pi1pi2}
+\end{split}
+\end{equation}
+The $K$ matrix can be written as
+\begin{equation}
+\begin{split}
+  \texttt{kMat\_Hmgns}\left(kr\alpha;\, mn\alpha''\right) &= \delta_{kr\alpha;\, mn\alpha''} - \frac{\PF^3}{E - \PF^2 \left(\frac{p_{k}^2}{m_N} + \frac{3}{4m_N}q_r^2 \right)} \sum_{l'} \sum_{i} w_n\, q_n^2 \\
+  & \quad  \times \widetilde{t}_{ll'}\left(p_k, p_i, E - \PF^2 \frac{3}{4m_N}q_r^2\right) \texttt{intz\_Hmgns}\left(\bar{\alpha}, \alpha''; q_r, q_n; p_i, p_m\right)
+  % \texttt{kMat}\left(kr\alpha;\, mn\alpha''\right) &= \frac{1}{E - \frac{p_{k}^2}{m_N} - \frac{3}{4m_N}q_r^2} \sum_{l'} \sum_{i} w_n\, q_n^2\, t_{ll'}^{sjt}\left(p_k, p_i, E - \frac{3}{4m_N}q_r^2\right) \\
+  % & \qquad  \times \texttt{intz}\left(\bar{\alpha}, \alpha''; q_r, q_n; p_i, p_m\right)
+\end{split}
+\end{equation}
+
+
+\section{Inhomogeneous equation}
+
+Glockle '96 (and Witala '88) use slightly different notation than Elster's lecture notes. We rewrite Eq.(165) of Glockle '96 or Eq.(10) of Witala '88 in the same notation as the preceding homogeneous equation:
+
+\begin{equation}
+  % \begin{split}
+  %   T(p, q, \alpha \{l s j t\}; \phi) &= t_{Nd}(p, q, \alpha; \phi) + \sum_{\bar{\alpha} \{l' s j t \} }\sum_{\alpha'' \{l''\}} \int_0^\infty dq'' {q''\,}^2 \\
+  %   & \qquad \times \int_{-1}^1{dx} \, \frac{t_{ll'}^{sjt} (p, \pi_1, E - \frac{3}{4} \frac{q^2}{m_N})}{E + i0 - (q^2 + {q''}^2 + x qq'')/m_N} \\
+  %   & \qquad \times \frac{G_{\bar{\alpha}\alpha''}(q, q'', x)}{\pi_1^{l'} \, \pi_2^{l''}} T(\pi_2, q'', \alpha''; \phi) \, , \label{eqn-inhomo-prime}
+  % \end{split}
+  \begin{split}
+    T(p, q, \alpha \{l s j t\}; \phi_{\lambda I}) &= t_{Nd}(p, q, \alpha; \phi_{\lambda I}) + \sum_{\bar{\alpha} \{l' s j t \} }\sum_{\alpha'' \{l''\}} \int_0^\infty dq'' {q''\,}^2 \\
+    & \qquad \times \int_{-1}^1{dx} \, \frac{t_{ll'}^{sjt} (p, \pi_1, E - \frac{3}{4} \frac{q^2}{m_N})}{E + i0 - (q^2 + {q''}^2 + x qq'')/m_N} \\
+    & \qquad \times \frac{G_{\bar{\alpha}\alpha''}(q, q'', x)}{\pi_1^{l'} \, \pi_2^{l''}} T(\pi_2, q'', \alpha''; \phi_{\lambda I}) \, , \label{eqn-inhomo-prime}
+  \end{split}
+\end{equation}
+where
+\begin{equation*}
+  \begin{split}
+    \pi_1(q, q'', x) &= \texttt{PiMmntm}\left(\frac{q}{2}, q''; x\right) \, , \\
+    \pi_2(q, q'', x) &= \texttt{PiMmntm}\left(q, \frac{q''}{2}; x\right) \, ,
+  \end{split}
+\end{equation*}
+and
+\begin{equation*}
+  \texttt{PiMmntm}(q_1, q_2; x) \equiv  \left(q_1^2 + q_2^2 + 2xq_1q_2\right)^\frac{1}{2}\, .
+\end{equation*}
+Here $\phi_{\lambda I}$ is an abstract label for the initial $N d$ asymptotic state:
+\begin{equation}
+ |\phi^\mathcal{J}_{\lambda I}\, S_z^d\, S_z^N \rangle = \sum_{l_d = 0\, , 2} \int dp\, p^2\, \varphi_{l_d} (p)\, \Big{|} p q_0 (l_d 1)1\; (\lambda \frac{1}{2})I\; \mathcal{J} (S_z^d+S_z^N)\; (0\frac{1}{2})\frac{1}{2} t_N \Big{\rangle} \, ,
+\end{equation}
+where $q_0$ is the relative momentum between $d$ and $N$, $S_z^d$ and $S_z^N$ are spin-z components of $d$ and $N$. Because the $z$ axis is chosen to be along the incoming direction of the nucleon, the z-component of $N-d$ orbital angular momentum is always $0$,
+\begin{equation*}
+  \lambda_z = 0 \, .
+\end{equation*}
+So we always have
+\begin{equation*}
+  \mathcal{J}_z = S_z^d + S_z^N \, .
+\end{equation*}
+Since the interaction conserves the total angular momentum, $T$ must not depend on $\mathcal{J}_z$. Neither does $t_{Nd}(p, q, \alpha; \phi_{\lambda I})$. In other words, we do not need to worry about $S_z^d$ or $S_z^N$.
+
+$l_d$ is the orbital angular momentum of the two-body subsystem of $\alpha_d$, so $l_d = 0$ or $2$. Define a collective label $\alpha_d$ for three-body channels that have the same two-body quantum numbers as the deuteron:
+$$
+\alpha_d = \{ (l_d 1)1\; (\lambda \frac{1}{2}) I \mathcal{J}\; (0 \frac{1}{2}) \frac{1}{2} \} \, ,
+$$
+see Eq.~\eqref{eqn-defalpha} for meaning of each quantum number.
+% We will explain its quantum numbers later.
+% that serves to remind us of any parameters that may come with the initial $N d$ asymptotic state, such as relative momentum, spin polarization, etc.
+The driving term is given by
+\begin{equation}
+  \begin{split}
+t_{Nd}(p, q, \alpha; \phi_{\lambda I}) &= \sum_{l'} \int_{-1}^1 dx\; t_{ll'}^{sjt} (p, \Pi_1, E - \frac{3}{4} \frac{q^2}{m_N})/\Pi_1^{l'} \\
+    & \quad \times \sum_{l_d = 0\, , 2}  G_{\bar{\alpha} \alpha_d} (q, q_0, x)\, \frac{\varphi_{l_d}(\Pi_2)}{\Pi_2^{l_d}} \, ,
+  \end{split}
+\end{equation}
+where $\alpha_d$ runs over only two values according to $l_d = 0\, , 2$ and $\lambda$ and $I$ are fixed.
+
+$\Pi_1$ and $\Pi_2$ are defined similarly to $\pi_1$ and $\pi_2$ as functions of $q$ and $q_0$:
+\begin{equation}
+\begin{split}
+  \Pi_1 &= \texttt{PiMmntm}\left(\frac{q}{2}, q_0; x\right) = \left(\frac{q^2}{4} + q_0^2 + q q_0 x \right)^{\frac{1}{2}} \, ,\\
+  \Pi_2 &= \texttt{PiMmntm}\left(q, \frac{q_0}{2}; x\right) = \left(q^2 + \frac{q_0^2}{4} + q q_0 x \right)^{\frac{1}{2}} \, .
+\end{split}
+\end{equation}
+ $\varphi_{l_d}(p)$ is the momentum-space wave function of the deuteron, when the two nucleons have relative momentum $p$ and orbital number $l_d$. For the Faddeev code, $\varphi_{l_d}(p)$ is one of the inputs from $\texttt{nnscat}$.
+
+$\phi$ in Eq.(166) of Glockle '96 is different from $\phi_{\lambda I}$. (Note that Eq.(166) of Glockle '96 has a denominator missing, and Eq.(A.1) of Witala '88 appears to be correct.)
+\begin{equation}
+  | \phi^\mathcal{J}\, S_z^d\, S_z^N \rangle = \sum_{\alpha_d\{\lambda I\}} C_{\lambda I}^{S_z^d\, S_z^N}\, \big{|}\phi^\mathcal{J}_{\lambda I}\, S_z^d\, S_z^N \big{\rangle} \, ,
+\end{equation}
+where
+\begin{equation}
+  C_{\lambda\, I}^{S_z^d\, S_z^N} = \sqrt{\frac{2\lambda + 1}{4\pi}}\,
+   C(\lambda \frac{1}{2} I, 0\, S_z^N)\, C(1I\mathcal{J}, S_z^d\, S_z^N) \, . \label{eqn-CCC}
+\end{equation}
+The $C$'s on the right-hand side of the above equations are CG coefficients.
+
+% \orig{
+% ******************  before modification
+% \begin{equation}
+%   \begin{split}
+% t_{Nd}(p, q, \alpha; \phi) &= \sum_{l'} \int_{-1}^1 dx\; t_{ll'}^{sjt} (p, \Pi_1, E - \frac{3}{4} \frac{q^2}{m_N})/\Pi_1^{l'} \\
+%     & \quad \times \sum_{\alpha_d\{l_d\, \lambda\, I\}}  G_{\bar{\alpha} \alpha_d} (q, q_0, x)\, \frac{\varphi_{l_d}(\Pi_2)}{\Pi_2^{l_d}}
+%     \, C_{\lambda I}^{S_z^d\, S_z^N} \, ,
+%   \end{split}
+% \end{equation}
+% % where
+% % \begin{equation}
+% %   C_{\lambda\, I}^{S_z^d\, S_z^N} = \sqrt{\frac{2\lambda + 1}{4\pi}}\,
+% %    C(\lambda \frac{1}{2} I, 0\, S_z^N)\, C(1I\mathcal{J}, S_z^d\, S_z^N) \, . \label{eqn-CCC}
+% % \end{equation}
+% ******************
+% }
+
+
+We will again discretize with complex contours, and expect to arrive at an inhomogeneous equation of the following form:
+\begin{equation}
+  % \widetilde{T}(p_k\, q_r\, \alpha; \phi_{\lambda I}) = \widetilde{t}_{Nd}(p_k\, q_r\, \alpha; \phi_{\lambda I}) + \sum_{\{m\, n\, \alpha''\}}  K\left(kr\alpha;\, mn\alpha''; \phi_{\lambda I} \right)\, \widetilde{T}(p_m\, q_n\, \alpha''; \phi_{\lambda I}) \, ,
+  \sum_{\{m\, n\, \alpha''\}}  K\left(kr\alpha;\, mn\alpha''; \phi_{\lambda I} \right)\, \widetilde{T}(p_m\, q_n\, \alpha''; \phi_{\lambda I}) = \widetilde{t}_{Nd}(p_k\, q_r\, \alpha; \phi_{\lambda I}) \, ,
+\end{equation}
+where
+\begin{equation}
+  \widetilde{T}(p_k\, q_r\, \alpha; \phi_{\lambda I}) \equiv T(\PF p_k\, \PF q_r\, \alpha; \phi_{\lambda I}) \, .
+\end{equation}
+\begin{equation}
+  \alpha = \{ (l_\alpha s_\alpha) j_\alpha\; (\lambda_\alpha \frac{1}{2}) I_\alpha\; \mathcal{J}\; (t \frac{1}{2}) \frac{1}{2}\} \, , \label{eqn-alpha}
+\end{equation}
+where, for $N d$ scattering, the total isospin is always $\mathcal{T} = 1/2$.
+
+The kernel $K$-matrix appears very much like the homogeneous version:
+\begin{equation}
+  \begin{split}
+    \texttt{kMat\_Inhmgns}\left(kr\alpha;\, mn\alpha''\right) &= \delta_{kr\alpha;\, mn\alpha''} - \PF^3 \sum_{l'} \sum_{i} w_n\, q_n^2\; \widetilde{t}_{ll'}(p_k, p_i, E - \PF^2 \frac{3}{4} \frac{q_r^2}{m_N}) \\
+  & \quad  \times
+  % \texttt{intz\_Inhmgns}\left(p_i\, q_r\, \bar{\alpha};\; p_m\, q_n\, \alpha''; E\right) \, ,
+  % \texttt{intz\_Inhmgns}\left(i\, r\, \bar{\alpha},\; m\, n\, \alpha''; E\right) \, ,
+  \texttt{intz\_Inhmgns}\left(i r \bar{\alpha},\; m n \alpha''; E\right) \, ,
+  \end{split} \label{eqn-kMat-inhomo}
+\end{equation}
+where
+\begin{equation}
+  \begin{split}
+    \widetilde{t}_{ll'}(p', p, E_2) \equiv t^{lsj}_{ll'}(\PF p', \PF p, E_2)
+  \end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+  % & \texttt{intz\_Inhmgns}\left(\bar{\alpha}, \alpha''; q_r, q_n; p_i, p_m\right) \\
+  % & \qquad = \int_{-1}^1{dx}\, \frac{G_{\bar{\alpha}\alpha''}\left(\PF q_r, \PF q_n, x\right)}{E - \PF^2 (q^2 + {q''}^2 + x qq'')/m_N}\, \frac{S_i(\pi_1)}{(\PF \pi_1)^{l'}}
+  % \frac{S_m(\pi_2)}{(\PF \pi_2)^{l''}} \, .
+  % & \texttt{intz\_Inhmgns}\left(\bar{\alpha}, \alpha''; E; q_r, q_n; p_i, p_m\right) \\
+  & \texttt{intz\_Inhmgns}\left(i r \bar{\alpha},\; m n \alpha''; E\right) \\
+  & \qquad = \int_{-1}^1{dx}\, \frac{G_{\bar{\alpha}\alpha''}\left(\PF q_r, \PF q_n, x\right)}{E - \PF^2 (q_r^2 + {q}_n^2 + x q_r q_n)/m_N}\, \frac{S_i(\pi_1)}{(\PF \pi_1)^{l'}}
+  \frac{S_m(\pi_2)}{(\PF \pi_2)^{l''}} \, ,
+\end{split}
+\end{equation}
+where $\pi_{1, 2}$ are defined in Eq.~\eqref{eqn_pi1pi2}.
+The driving term:
+\begin{equation}
+% \begin{split}
+%     \widetilde{t}_{Nd}(p_k, q_r, \alpha; \phi_{\lambda I}) = \texttt{tNd\_tildeT}(p_k, q_r, \alpha; \phi_{\lambda I}) &= \sum_{l'} \int_{-1}^1 dx\; t_{ll'}^{sjt}  (\PF p_k, \Pi_1, E - \PF^2\,  \frac{3q_r^2}{4m_N}) / (\Pi_1)^{l'} \\
+%     & \times \sum_{\alpha_d \{l_d\, \lambda\, I\} }  G_{\bar{\alpha} \alpha_d} (\PF q_r, q_0, x)\, \frac{\varphi_{l_d}(\Pi_2)}{\Pi_2^{l_d}}
+%     \, C_{\alpha_d}^{S_z^d\, S_z^N}
+%     \, ,
+% \end{split}
+\begin{split}
+    \widetilde{t}_{Nd}(p_k, q_r, \alpha; \phi_{\lambda I}) &= \texttt{tNd\_tildeT}(p_k, q_r, \alpha; q_0, \lambda, I) \\
+    &= \sum_{l'} \int_{-1}^1 dx\; t_{ll'}^{sjt}  (\PF p_k, \Pi_1, E - \PF^2\,  \frac{3q_r^2}{4m_N}) / (\Pi_1)^{l'} \\
+    & \quad \times \sum_{l_d = 0\, , 2}  G_{\bar{\alpha} \alpha_d} (\PF q_r, q_0, x)\, \frac{\varphi_{l_d}(\Pi_2)}{\Pi_2^{l_d}}
+    \, ,
+\end{split}\label{eqn_tilde_tNd}
+\end{equation}
+
+where,
+\begin{equation}
+\begin{split}
+  \Pi_1(r, h) &= \texttt{PiMmntm}\left(\PF \frac{q_r}{2}, q_0; x\right) = \left(\PF^2 \frac{q_r^2}{4} + q_0^2 + \PF q_r q_0 x \right)^{\frac{1}{2}} \, ,\\
+  \Pi_2(r, h) &= \texttt{PiMmntm}\left(\PF q_r, \frac{q_0}{2}; x\right) = \left(\PF^2 q_r^2 + \frac{q_0^2}{4} + \PF q_r q_0 x \right)^{\frac{1}{2}} \, ,
+\end{split}
+\end{equation}
+and
+\begin{equation}
+  \alpha_d = \{(l_d 1) 1\; (\lambda \frac{1}{2}) I\; \mathcal{J} (0 \frac{1}{2}) \frac{1}{2} \} \, .
+\end{equation}
+Note that $\alpha_d$ and $\alpha$ in Eq.~\eqref{eqn-alpha} share the same $\mathcal{J}$ and $\mathcal{T}$, and that $\lambda$ and $I$ are input parameters for $\texttt{tNd\_tildeT}(p_k, q_r, \alpha; q_0, \lambda, I)$.
+
+WARNING: it is $t_{ll'}^{sjt}$ rather than $\widetilde{t}_{ll'}$ Eq.~\eqref{eqn_tilde_tNd}!
+
+% \orig{
+% ********************* before modification
+% \begin{equation}
+%   \begin{split}
+%     \widetilde{t}_{Nd}(p_k, q_r, \alpha; \phi_{\lambda I}) &= \texttt{tNd\_tildeT}(p_k, q_r, \alpha; \phi_{\lambda I}) \\
+%     &= \sum_{l'} \int_{-1}^1 dx\; t_{ll'}^{sjt}  (\PF p_k, \Pi_1, E - \PF^2\,  \frac{3q_r^2}{4m_N}) / (\Pi_1)^{l'} \\
+%     & \times \sum_{\alpha_d \{l_d\, \lambda\, I\} }  G_{\bar{\alpha} \alpha_d} (\PF q_r, q_0, x)\, \frac{\varphi_{l_d}(\Pi_2)}{\Pi_2^{l_d}}
+%     \, C_{\alpha_d}^{S_z^d\, S_z^N}
+%     \, ,
+% \end{split}
+% \end{equation}
+% *********************
+% }
+
+
+\section{$U$ matrix}
+
+\subsection{\texttt{TAMP\_omega}}
+Even with $T(\PF p, \PF q, \alpha; \phi_{\lambda I}) = \widetilde{T}(p_k\, q_r\, \alpha; \phi_{\lambda I})$ solved for, we are still a few steps away from calculating $N d$ scattering observables.
+we need to evaluate
+\cor{
+\begin{equation}
+  % T\left[\cmplx{\omega}(q_r, x_h; q_0'), \PF q_r, \alpha; \phi_{\lambda I} \right] \;\; \text{with}\; \; \cmplx{\omega}(q_r, x_h; q_0') = \left({q'_0}^2 + \PF^2 \frac{q_r^2}{4} + \PF {q'_0} q_r x_h \right)^{\frac{1}{2}} \, ,
+  T\left[\cmplx{\omega_2}(q_r, x_h; q_0'), \PF q_r, \alpha; \phi_{\lambda I} \right] \;\; \text{with}\; \; \cmplx{\omega_2}(q_r, x_h; q_0') = \left({q'_0}^2 + \PF^2 \frac{q_r^2}{4} + \PF {q'_0} q_r x_h \right)^{\frac{1}{2}} \, ,
+\end{equation}
+}
+where $\cmplx{\omega_2}$ is also defined in Eq.~\eqref{eqn_defomega}.
+
+\orig{
+*** errors in previous definition of $\omega$
+\begin{equation*}
+  T\left[\cmplx{\omega}(q_r, x_h; q_0'), \PF q_r, \alpha; \phi_{\lambda I} \right] \;\; \text{with}\; \; \cmplx{\omega}(q_r, x_h; q_0') = \left(\frac{{q'_0}^2}{4} + \PF^2 q_r^2 + \PF {q'_0} q_r x_h \right)^{\frac{1}{2}} \, ,
+\end{equation*}
+}
+
+where $q_r$ are predefined $q$-mesh points and $x_h$ the $x$-mesh points.
+% To evaluate $T\left[\cmplx{\omega}(q_r, x_h; q_0'), \PF q_r, \alpha; \phi \right]$,
+We first notice that $T\left(\cmplx{\omega_2}, \PF q, \alpha; \phi \right)$ for any complex $\omega$ can be obtained by plugging $T(\PF p, \PF q, \alpha; \phi_{\lambda I})$ into Eq.~\eqref{eqn-inhomo-prime} :
+\begin{equation}
+\begin{split}
+  T(\cmplx{\omega_2}, \PF q, \alpha; \phi_{\lambda I}) &= t_{Nd}(\cmplx{\omega_2}, \PF q, \alpha; \phi_{\lambda I}) + \PF^3 \sum_{l'}\sum_{\alpha''} \int_0^\infty dq'' {q''\,}^2 \\
+    & \qquad \times \int_{-1}^1{dx} \, \frac{t_{ll'}^{sjt} (\cmplx{\omega_2}, \PF \pi_1, E - \PF^2\, \frac{3q^2}{4m_N})}{E + i0 - \PF^2 (q^2 + {q''}^2 + x q q'')/m_N} \\
+    & \qquad \times \frac{G_{\bar{\alpha}\alpha''}(\PF q, \PF q'', x)}{(\PF \pi_1)^{l'} \, (\PF \pi_2)^{l''}} T(\PF \pi_2, \PF q'', \alpha''; \phi_{\lambda I})
+\end{split}
+\end{equation}
+The integral is discretized as follows
+\begin{equation}
+\begin{split}
+  & \texttt{int\_omega}\left(q_r, x_h, \alpha; q_0', \phi_{\lambda I} \right) = \PF^3 \sum_{l'}\sum_{\alpha''} \sum_n \sum_i w_n\, {q}_n^2\, t_{ll'}^{sjt} \left[\cmplx{\omega_2}(q_r, x_h; q_0'), \PF p_i, E - \PF^2\, \frac{3q_r^2}{4m_N}\right] \\
+  % & \qquad \qquad \times  \sum_m \texttt{intz\_Inhmgns}\left(\bar{\alpha}, \alpha''; E; q_r, q_n; p_i, p_m\right) \widetilde{T}(p_m, q_n, \alpha''; \phi_{\lambda I}) \, .
+  & \qquad \qquad \times  \sum_m \texttt{intz\_Inhmgns}\left(i r \bar{\alpha},\; m n \alpha''; E\right) \widetilde{T}(p_m, q_n, \alpha''; \phi_{\lambda I}) \, .
+\end{split}
+\end{equation}
+Comparing the above expression with Eq.~\eqref{eqn-kMat-inhomo}, we realize that $\texttt{intz\_Inhmgns}\left(i r \bar{\alpha},\; m n \alpha''; E\right)$
+% and $\widetilde{T}(p_m, q_n, \alpha''; \phi)$
+needs to be stored when $\texttt{kMat\_Inhmgns}$ is generated, so that it can be reused in the above evaluation.
+
+The driving term:
+\begin{equation}
+\begin{split}
+  \texttt{tNd\_omega}\left(q_r, x_h, \alpha; q_0', q_0, \lambda, I \right) &= \sum_{l'} \int_{-1}^1 dx'\; t_{ll'}^{sjt} \left[\cmplx{\omega_2}(q_r, x_h; q_0'), \Pi_1, E - \PF^2 \frac{3q_r^2}{4m_N}\right]/\Pi_1^{l'} \\
+    & \quad \times \sum_{l_d = 0\, , 2} G_{\bar{\alpha} \alpha_d} (\PF q_r, q_0, x')\, \frac{\varphi_{l_d}(\Pi_2)}{\Pi_2^{l_d}}\, ,
+\end{split}
+\end{equation}
+
+
+% \orig{
+% ***************  before modification
+% \begin{equation}
+% \begin{split}
+%   \texttt{tNd\_omega}\left(q_r, x_h, \alpha; q_0', \phi_{\lambda I} \right) &= \sum_{l'} \int_{-1}^1 dx'\; t_{ll'}^{sjt} \left[\cmplx{\omega_1}(q_r, x_h; q_0'), \Pi_1, E - \PF^2 \frac{3q_r^2}{4m_N}\right]/\Pi_1^{l'} \\
+%     & \quad \times \sum_{\alpha_d\{l_d\, \lambda\, I\}}  G_{\bar{\alpha} \alpha_d} (\PF q_r, q_0, x')\, \frac{\varphi_{l_d}(\Pi_2)}{\Pi_2^{l_d}}
+%     \, C_{\lambda I}^{S_z^d\, S_z^N} \, ,
+% \end{split}
+% \end{equation}
+% ***************
+% }
+
+where
+\begin{equation}
+\begin{split}
+  \Pi_1(r, h) &= \left(\PF^2 \frac{q_r^2}{4} + q_0^2 + \PF q_r q_0 x' \right)^{\frac{1}{2}} \, ,\\
+  \Pi_2(r, h) &= \left(\PF^2 q_r^2 + \frac{q_0^2}{4} + \PF q_r q_0 x' \right)^{\frac{1}{2}} \, .
+\end{split}
+\end{equation}
+Warning: Do not confuse the integration variable $x'$ with $x_h$!
+Define
+\begin{equation}
+\begin{split}
+\texttt{TAMP\_omega}\left(q_r, x_h, \alpha; q_0', q_0, \lambda, I\right) &\equiv \texttt{tNd\_omega}\left(q_r, x_h, \alpha; q_0', q_0, \lambda, I\right) \\
+& \quad + \texttt{int\_omega}\left(q_r, x_h, \alpha; q_0', q_0, \lambda, I\right) \, ,
+\end{split}
+\end{equation}
+
+
+\subsection{$U$-matrix}
+
+One of the keys is to calculate the $U$ amplitude which describes $N d$ elastic scattering. In terms of operators, $U$ is related to $T$ through Eq.(57) of Glockle '96. And we need to the matrix element of operator $U$ between $N d$ asymptotic states, denoted by $\phi$ (initial) and $\phi'$ (final):
+\begin{equation}
+  \langle \phi'_{\lambda' I'} | U | \phi_{\lambda I} \rangle = \langle \phi'_{\lambda' I'} | P G_0^{-1} | \phi_{\lambda I} \rangle + \langle \phi'_{\lambda' I'} | P T | \phi_{\lambda I} \rangle \, .
+\end{equation}
+
+\begin{equation}
+\begin{split}
+  % \langle \phi'_{\lambda' I'} | P G_0^{-1} | \phi_{\lambda I} \rangle &= \sum_{l_d' = 0\, , 2} \;  \int_{-1}^{1} dx \left(E - \frac{\Pi_1^2}{m_N} - \frac{3 {q'_0}^2}{4m_N} \right) \frac{\varphi_{l_d'}(\Pi_1)}{\Pi_1^{l_d'}} \\
+  % & \qquad \times  \sum_{l_d =0\, , 2} \frac{\varphi_{l_d}(\Pi_2)}{\Pi_2^{l_d}} G_{\alpha_d' \alpha_d} (q_0', q_0, x) \, ,
+  \langle \phi'_{\lambda' I'} | P G_0^{-1} | \phi_{\lambda I} \rangle &= \sum_{l_d' = 0\, , 2} \;  \int_{-1}^{1} dx \left(E - \frac{\widetilde{\Pi}_1^2}{m_N} - \frac{3 {q'_0}^2}{4m_N} \right) \frac{\varphi_{l_d'}(\widetilde{\Pi}_1)}{\widetilde{\Pi}_1^{l_d'}} \\
+  & \qquad \times  \sum_{l_d =0\, , 2} \frac{\varphi_{l_d}(\widetilde{\Pi}_2)}{\widetilde{\Pi}_2^{l_d}} G_{\alpha_d' \alpha_d} (q_0', q_0, x) \, ,
+\end{split}
+\end{equation}
+where
+\begin{equation}
+\begin{split}
+  \widetilde{\Pi}_1 &\equiv \texttt{PiMmntm}\left(\frac{q'_0}{2}, q_0,\ ; x\right) = \left(\frac{{q'_0}^2}{4} + q_0^2 + {q'_0} q_0 x \right)^{\frac{1}{2}} \, ,\\
+  \widetilde{\Pi}_2 &\equiv \texttt{PiMmntm}\left(q'_0, \frac{q_0}{2}; x\right) = \left({q'_0}^2 + \frac{q_0^2}{4} + {q'_0} q_0 x \right)^{\frac{1}{2}} \, .
+\end{split}
+\end{equation}
+Discretization $x \to \{x_h\}$:
+\begin{equation}
+\begin{split}
+% \langle \phi'_{\lambda' I'} | P G_0^{-1} | \phi_{\lambda I} \rangle  &= \texttt{PInvG0}(q_0', {S_z^d}', {S_z^N}'; q_0, {S_z^d}, {S_z^N}) \\
+% & = \sum_{\alpha_d' \, \{l_d' \lambda' I'\}} \;  C_{\alpha_d'}^{{S_z^d}'\, {S_z^N}'}  \sum_h w_{x,h} \left(E - \frac{\Pi_1(x_h)^2}{m_N} - \frac{3 {q'_0}^2}{4m_N} \right) \\
+%   & \; \times \frac{\varphi_{l_d'}\left[\Pi_1(x_h)\right]}{[\Pi_1(x_h)]^{l_d'}} \sum_{\alpha_d \, \{l_d \lambda I\}} C_{\alpha_d}^{S_z^d\, S_z^N}\, \frac{\varphi_{l_d}\left[\Pi_2(x_h)\right]}{[\Pi_2(x_h)]^{l_d}}  G_{\alpha_d' \alpha_d} (q_0', q_0, x_h)
+\langle \phi'_{\lambda' I'} | P G_0^{-1} | \phi_{\lambda I} \rangle  &= \texttt{PInvG0}(q_0', \lambda', I'; q_0, \lambda, I) \\
+& =  \sum_{l_d' = 0\, , 2} \; \sum_h w_{x,h} \left(E - \frac{\widetilde{\Pi}_1^2}{m_N} - \frac{3 {q'_0}^2}{4m_N} \right) \\
+  & \; \times \frac{\varphi_{l_d'}\left(\widetilde{\Pi}_1\right)}{(\widetilde{\Pi}_1)^{l_d'}} \sum_{l_d =0\, , 2} \, \frac{\varphi_{l_d}\left(\widetilde{\Pi}_2\right)}{(\widetilde{\Pi}_2)^{l_d}}  G_{\alpha_d' \alpha_d} (q_0', q_0, x_h)
+\end{split}
+\end{equation}
+where $x_h$ and $w_{x, h}$ are the Gauss-Legendre mesh and weights on $[-1, 1]$.
+
+\begin{equation}
+\begin{split}
+  % \langle \phi'_{\lambda' I'} | P T | \phi_{\lambda I} \rangle &= \sum_{l_d' = 0\, , 2} \; \int dq q^2 \int_{-1}^{1} dx \frac{\varphi_{l_d'}(\pi_1)}{\pi_1^{l_d'}} \\
+  % & \quad \times  \sum_{\alpha} \frac{T(\pi_2, q, \alpha; \phi_{\lambda I})}{\pi_2^{l}} G_{\alpha_d' \alpha} (q_0', q, x) \, ,
+  \langle \phi'_{\lambda' I'} | P T | \phi_{\lambda I} \rangle &= \sum_{l_d' = 0\, , 2} \; \int dq q^2 \int_{-1}^{1} dx \varphi_{l_d'}(\omega_1)/{\omega_1}^{l_d'}\\
+  % \frac{\varphi_{l_d'}(\omega_1)}{\omega_1^{l_d'}} \\
+  & \quad \times  \sum_{\alpha\{l\}}  G_{\alpha_d' \alpha} (q_0', q, x)
+  % \frac{T(\omega_2, q, \alpha; \phi_{\lambda I})}{\omega_2^{l}} \, ,
+  T(\omega_2, q, \alpha; \phi_{\lambda I})/{\omega_2}^{l} \, ,
+\end{split}
+\end{equation}
+where
+\begin{equation}
+\begin{split}
+  \omega_1 &\equiv \texttt{PiMmntm}\left(\frac{q_0'}{2}, q; x\right) = \left(\frac{{q'_0}^2}{4} + q^2 + {q'_0} q x \right)^{\frac{1}{2}} \, ,\\
+  \omega_2 &\equiv \texttt{PiMmntm}\left(q'_0, \frac{q}{2}; x\right) = \left({q'_0}^2 + \frac{q^2}{4} + {q'_0} q x \right)^{\frac{1}{2}} \, . \label{eqn_defomega}
+\end{split}
+\end{equation}
+$q \to \PF \{q_r\}$:
+\begin{equation}
+\begin{split}
+  \langle \phi'_{\lambda' I'} | P T | \phi \rangle &\equiv \texttt{PT}(q_0', \lambda', I'; q_0, \lambda, I)   \\
+  &= \PF^3 \sum_{l_d' = 0\, , 2} \;
+  \sum_r w_{r} q_r^2 \sum_h w_{x, h} \frac{\varphi_{l_d'}\left(\omega_1\right)}{\left(\omega_1\right)^{l_d'}} \\
+  & \quad \times  \sum_{\alpha} G_{\alpha_d' \alpha}(q_0', \PF q_r, x_h) / \left(\omega_2^l\right) \texttt{TAMP\_omega}\left(q_r, x_h, \alpha;  q_0', q_0, \lambda, I\right)  \, .
+\end{split}
+\end{equation}
+
+\section{$Nd$ scattering lengths and phase shifts}
+
+The following equations can be found in Ref.~\cite{Huber:1995zza}.
+
+Equations (2.26) and (2.23) in Ref.~\cite{Huber:1995zza}:
+\begin{equation}
+\begin{split}
+U^J_{\lambda'\Sigma',\lambda\Sigma}=\sum_{I'}\sum_{I}\sqrt{\hat{I'}\hat{\Sigma'}}(-)^{J-I'}
+  \begin{Bmatrix}
+    \lambda' & \frac 1 2  & I'\\
+    j_d & J & \Sigma'
+  \end{Bmatrix}
+\sqrt{\hat{I}\hat{\Sigma}}(-)^{J-I}
+  \begin{Bmatrix}
+    \lambda & \frac 1 2  & I\\
+    j_d & J & \Sigma
+  \end{Bmatrix}
+U^J_{\lambda'I',\lambda I}
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+S^J_{\lambda' I',\lambda I}=\delta_{\lambda'\lambda}\delta_{II'}-\frac 4 3 \pi iq_0 mi^{\lambda'-\lambda}U^J_{\lambda' I',\lambda I}
+\end{split}
+\end{equation}
+Notice the difference in the notations for quantum numbers of three-nucleon channels.
+
+Equations (2.37) - (2.42) in Ref.~\cite{Huber:1995zza}:
+\begin{equation}
+\begin{split}
+S=(S^J_{\lambda'\Sigma', \lambda\Sigma})
+=\begin{pmatrix}
+S^J_{J\mp\frac3 2\ \frac3 2,J\mp\frac3 2\ \frac3 2} & S^J_{J\mp\frac3 2\ \frac3 2,J\pm\frac1 2\ \frac1 2} &  S^J_{J\mp\frac3 2\ \frac3 2,J\pm\frac1 2\ \frac3 2}\\
+S^J_{J\pm\frac1 2\ \frac1 2,J\mp\frac3 2\ \frac3 2} & S^J_{J\pm\frac1 2\ \frac1 2,J\pm\frac1 2\ \frac1 2} &  S^J_{J\pm\frac1 2\ \frac1 2,J\pm\frac1 2\ \frac3 2}\\
+S^J_{J\pm\frac1 2\ \frac3 2,J\mp\frac3 2\ \frac3 2} & S^J_{J\pm\frac1 2\ \frac3 2,J\pm\frac1 2\ \frac1 2} &  S^J_{J\pm\frac1 2\ \frac3 2,J\pm\frac1 2\ \frac3 2}
+\end{pmatrix}
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+S=U^T e^{2i\Delta} U
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+U=v\ w\ x
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+v=
+\begin{pmatrix}
+1 & 0 & 0 \\
+0 & \cos \epsilon & \sin \epsilon\\
+0 & -\sin \epsilon & \cos \epsilon
+\end{pmatrix}
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+w=
+\begin{pmatrix}
+\cos \xi & 0 & \sin \xi\\
+0 & 1 & 0\\
+-\sin \xi & 0 & \cos \xi
+\end{pmatrix}
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+x=
+\begin{pmatrix}
+\cos \eta & \sin \eta & 0\\
+-\sin \eta & \cos \eta & 0\\
+0 & 0 & 1
+\end{pmatrix}
+\end{split}
+\end{equation}
+At zero energy only the 8-wave scattering lengths survive, the doublet($\Sigma$=$\frac1 2$)and the quartet($\Sigma$=$\frac3 2$) ones. They are defined as the limits $q_0$ $\rightarrow$ 0 of the eigenphases
+\begin{equation}
+\begin{split}
+\delta^{\frac 1 2}_{\frac 1 2 0}(q_0)\rightarrow -^2 aq_0
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+\delta^{\frac 3 2}_{\frac 3 2 0}(q_0)\rightarrow -^4 aq_0
+\end{split}
+\end{equation}
+and equivalently by
+\begin{equation}
+\begin{split}
+^{2\Sigma+1}a=\frac {2\pi} 3{} mU^{J}_{\Sigma \lambda=0,\Sigma \lambda=0}|_{q_0=0}
+\end{split}
+\end{equation}
+
+\section{Tips and lessons of running code}
+
+1. $\PF = e^{-i\phi}$, $\phi > 10^\circ$, $\texttt{NP} \geqslant 70$, and $\texttt{NAuxMesh} \geqslant 70$ seem to be required to obtain three-digit convergence for scattering length $a_2^{nd}$.
+
+2. Relation between $q_0$ and $E_{lab}$:
+\begin{equation}
+\begin{split}
+q_0 = \frac{m_d}{m_N+m_d}\sqrt{2m_NE_{lab}}
+\end{split}
+\end{equation}
+for example, take $\frac{m_d}{m_N+m_d} = \frac{2}{3}$, $m_N = 938.918725Mev$, $E_{lab} = 1Mev$, then we have $q_0 = 28.89Mev$.
+
+3. $\texttt{U}$ convention: The actual determination of the mixing parameters leads to some ambiguities. The eigenvectors related to the eigenvalue problem build up the three rows of $\texttt{U}$(the eigenvectors calculated by lapack\_zgeev are stored in columns instead of rows). This can be done in six ways. Moreover, there is arbitrariness in the chioce of the overall sign for each eigenvector. Clearly, these various $\texttt{U}$'s lead to quite different mixing parameters. A convention is required and for weak mixing the following one appears to be natural: we choose the one which grows steadily out of an S matrix, which is already diagonal and to which belongs $\texttt{U} = 1$. Therefore we arrange the three eigenvectors in $\texttt{U}$ in such a way that the dominant component stands in the diagonal and has a postive sign. This convention uniquely defines $\texttt{U}$ and, consequently, the mixing parameters. Ref.~\cite{Huber:1995zza}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Glockle96}
+W.~Gl\"ockle, H.~Witala, D.~H\"uber, H.~Kamada, and J.~Golak,
+``The three-nucleon continuum: achievements, challenges and applications,'' Phys. Rept. \textbf{274}, 107-285 (1996).
+
+\bibitem{Witala88}
+H.~Witala, T.~Cornelius, and W.~Gl\"ockle,
+``Elastic scattering and break-up processes in the n-d system,''
+Few-Body Sys. \textbf{3}, 123-134 (1988).
+
+%\cite{Huber:1995zza}
+\bibitem{Huber:1995zza}
+D.~Huber, W.~Glockle, J.~Golak, H.~Witala, H.~Kamada, A.~Kievsky, S.~Rosati and M.~Viviani,
+``Realistic phase shift and mixing parameters for elastic neutron-deuteron scattering: Comparison of momentum space and configuration space methods,''
+Phys. Rev. C \textbf{51}, 1100-1107 (1995)
+doi:10.1103/PhysRevC.51.1100
+%22 citations counted in INSPIRE as of 22 Jul 2020
+
+\bibitem{Glockle_fewbody}
+W.~Gl\"ockle,
+The Quantum Mechanical Few-Body Problem,
+1983.
+
+\end{thebibliography}
+
+\end{document}

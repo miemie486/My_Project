@@ -1,0 +1,35 @@
+
+* Resolve performance issue with gen_tNd_omega
+* Test complex implementation of nnscat/vtpe0
+* Test search zeros of complex detK
+* for channels with the same 2body subsystem, same tmat was repeatedly calculated, wasting time.
+* Use positive real contour to calculate 2body t-matrix (and h2wf) for complex valued p' and p
+  - instead, one should play with phi
+* Factor out gen_int_omega out of get_TAMP_omega
+* Re-organize source code in kMatGen.h
+
+* (Done!) Initialize statically Pi_1(qr, xh) and Pi_2(qr, xh) and H2 wf on them
+* (Done!) New gent_Nd
+* (Done!) Accurate deuteron BE in scatlen (umatrix.SetEnergyLoc)
+* (Not necessary) Save two-body tmatrix to speed up?
+* (Done!) High order calculations for H3 BE
+* Add harmonic trap (the trap probably needs infrared cutoffs)
+* Test energy-depdent two-body dibaryon
+* Is higher lambda (orbit of the third nucleon) perturbative?
+* Scattering equation
+* Three-body force
+* Three nucleons in a box
+
+- Change analytic form of the regulator to, e.g., the dipole form so as to
+  limitation on contour rotation angle.
+
+- New exacutable to show DetK_homogeneous for a list of E3 (cmplx)
+
+- On ctp, setting OMP_THREAD_LIMIT=70 slows down the code by too much. Need to
+  find out the cause.
+
+- Save intz_Hmgns(alpha1 pi qr, alpha2 pm qn) to intzTable_Hmgns so that it does
+  not need to be re-evaluated when E is changed.
+
+- Develop a struct or class for three-body quantum number set, currently
+  represented by a real array, alpha[0 - _N_QMN_CHN_]

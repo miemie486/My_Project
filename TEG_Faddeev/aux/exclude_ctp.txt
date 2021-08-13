@@ -1,0 +1,13 @@
+.*
+*.o
+*.mod
+bin/*dSYM
+saved/
+aux/
+obj/
+jobs/
+bin/
+chengdu/
+tegfdv.sublime-project
+tegfdv.sublime-workspace
+*sublime*

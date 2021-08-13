@@ -1,0 +1,46 @@
+\documentclass[11pt]{article}
+
+\usepackage{bbm}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{braket}
+\usepackage{authblk}
+\usepackage{hyperref}
+\setlength{\parindent}{2em}
+\geometry{left=2.5cm,right=2.5cm,top=2.0cm,bottom=2.0cm}
+% About the author
+\renewcommand*{\Authand}{, }
+\renewcommand\Affilfont{\itshape\small}
+\lstset{language=C}
+
+\date{}
+
+\title{Variation of Two-Body Potential Does Not Change the Form of the Faddeev Equation}
+\author[1]{Zeyuan Ye}
+\setcounter{Maxaffil}{0}
+
+\begin{document}
+  \maketitle
+
+  Notations in this paper are consistent with the ones in \textit{Elster's
+    note}. We start from the Faddeev equation in the momentum space (equation
+  (3.33) in \textit{Elster's note}),
+
+  \begin{equation}
+    \braket{\boldsymbol{p q}| \psi} = \int{\int{d^3p'' d^3q''}} \int{\int{d^3p' d^3q'}} \braket{\boldsymbol{pq}|G_0t|\boldsymbol{p'q'}} \braket{\boldsymbol{p'q'}|P|\boldsymbol{p''q''}} \braket{\boldsymbol{p'' q''}|\psi}
+  \end{equation}
+  Stripe the t part. Notice that t only depends on the two-body-CM energy, $E
+  - \frac{3}{4m}q^2$, and diagonalize the third particle's momentum $q$,
+  \begin{equation}
+    \braket{\boldsymbol{pq}|t(E)|\boldsymbol{p'q'}} = \delta(\boldsymbol{q - q'}) \braket{\boldsymbol{p}|t(E - \frac{3}{4m}q^2)|\boldsymbol{p'}}
+    \end{equation}
+    The only thing that an alteration of potential can change is the value of
+    $\braket{\boldsymbol{p}|t(E - \frac{3}{4m}q^2)|\boldsymbol{p'}}$ which comes
+    from the solution of LSE, yet the form of calling t matrix remains the same.
+    So the form of Faddeev equation remains the same.
+
+\end{document}

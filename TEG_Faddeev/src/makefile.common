@@ -1,0 +1,87 @@
+# *****************************************************
+# Shell configurations. I am more comfortable with bash script. If you don't use this line, makefile will use sh script.
+# SHELL := /bin/bash
+# *****************************************************
+# Python setup. Set python library path.
+# export PYTHONPATH=$(HOME)/TEG_Faddeev/src/tool
+# *****************************************************
+# Variables to control Makefile operation
+
+ifdef MACCXXC
+CXXC=$(MACCXXC)
+else
+ifdef TEGCXXC
+CXXC=$(TEGCXXC)
+else
+CXXC=g++
+endif
+endif
+
+# CXX = $(CXXC) -Wall -g -std=c++14 -O3 -fopenmp -DMKL_Complex16="std::complex<double>"
+CXX = $(CXXC) -Wall -g -std=c++14 -O3 -fopenmp
+# Ignore openMP
+# CXX = $(CXXC) -Wall -g -std=c++14 -O3
+
+###################### LIB #####################
+
+ifdef MACCXXC
+# openMP threading
+MKLIB = ${MKLROOT}/lib/libmkl_intel_lp64.a ${MKLROOT}/lib/libmkl_intel_thread.a ${MKLROOT}/lib/libmkl_core.a -liomp5 -lpthread -lm -ldl
+
+# g++ linker for Linux
+# MKLIB = -lmkl_gf_lp64 -lmkl_core -lmkl_gnu_thread
+
+# ipl64
+# MKLIB = ${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_intel_thread.a ${MKLROOT}/lib/libmkl_core.a -liomp5 -lpthread -lm -ldl
+
+# Sequential
+# MKLIB = ${MKLROOT}/lib/libmkl_intel_lp64.a ${MKLROOT}/lib/libmkl_sequential.a ${MKLROOT}/lib/libmkl_core.a -lpthread -lm -ldl
+
+else
+MKLIB = -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -liomp5 -lpthread -lm -ldl
+endif
+
+# OTHERLIB = -lgfortran -llapack
+OTHERLIB = -lgfortran
+
+ifdef TEGLIB
+LIB = $(MKLIB) $(OTHERLIB) $(TEGLIB)
+else
+LIB = $(MKLIB) $(OTHERLIB)
+endif
+
+###################### DIR VARS #####################
+
+NNPATH = ../../../nnscat
+FDVROOT = ../..
+BINDIR = $(FDVROOT)/bin
+
+###################### INC #####################
+
+MYINC = $(FDVROOT)/src/inc
+# Compiler options for both macOS and Linux
+# openMP
+MKLINC = -m64 -I${MKLROOT}/include
+# ipl64
+# MKLINC = -DMKL_ILP64 -m64 -I${MKLROOT}/include
+# Sequential
+# MKLINK = -I${MKLROOT}/include
+
+INC = $(MKLINC) -I$(MYINC)
+
+###################### VPATH #####################
+
+VPATH = $(FDVROOT)/bin:$(FDVROOT)/obj:$(FDVROOT)/src/inc:$(NNPATH)/obj
+
+###################### Pattern Rules #####################
+
+ALLOBJS = $(FDVROOT)/obj/*.o $(NNPATH)/obj/*.o
+
+%.o: %.cpp %.h
+	$(CXX) -o $(FDVROOT)/obj/$@ -c $< $(INC)
+
+%.o: %.cpp
+	$(CXX) -o $(FDVROOT)/obj/$@ -c $< $(INC)
+
+%.exe: %.cpp
+	$(CXX) -o $(FDVROOT)/bin/$@ $< $(ALLOBJS) $(LIB) $(INC)

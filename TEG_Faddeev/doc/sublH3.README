@@ -1,0 +1,35 @@
+
+
+* To run sublH3
+
+$ cd jobs/
+$ ../bin/sublH3 x
+where x is usually a small number, like 0.1, 0.01, etc., which will be
+explained below.
+
+
+* sublH3 looks for sublH3_inputs.csv in the working directory and reads the
+necessary parameters from there. The line starting with "potential,POTNAME"
+directs sublH3 to have potential named by POTNAME as the input nucleon-nucleon
+(NN) potential.
+
+However, the effective field theory (EFT) NN potentials normally have several
+orders: leading order (LO), next-to-leading order (NLO), and so on. We would
+like to compute the NLO correction in perturbation theory,
+  < psi_LO | V_NLO | psi_LO>
+where psi_LO is the LO wave function obtained by treating V_LO exactly. To
+obtain < psi_LO | V_NLO | psi_LO > numerically, we can use sublH3. sublH3
+constructs an auxiliary potential
+V_aux(x) = VLO + x*VNLO
+and returns the triton BE for this auxiliary potential, which is a function of
+x, BE_aux(x). If VLO and VNLO behave well, which they indeed do, BE_aux(x) is
+analytic around x = 0. Then, one can show
+< psi_LO | V_NLO | psi_LO > = d/dx BE_aux(x) for x = 0
+
+* One can call sublH3 with various values of x near x = 0, and calculate
+numerical derivative for x = 0.
+
+
+
+
+

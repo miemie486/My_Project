@@ -1,0 +1,26 @@
+\documentclass[8pt]{article}
+
+\usepackage{bbm}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{indentfirst}
+\usepackage{braket}
+
+\setlength{\parindent}{2em}
+\geometry{left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm} %设置页边距
+\lstset{language=C}
+
+\title{Longitudinal response function of Deuteron}
+
+\begin{document}
+\begin{equation}
+  \begin{aligned}
+  \braket{\psi|\psi} 
+  = \sum_{\alpha}\int{p^2dp}\int{q^2dq}\braket{\psi|\alpha, p, q} \braket{\alpha, p, q| \psi}
+  = 1
+  \end{aligned}
+\end{equation}
+\end{document}

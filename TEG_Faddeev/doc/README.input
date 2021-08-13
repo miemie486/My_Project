@@ -1,0 +1,33 @@
+If you want to use file to input data, please obey this format:
+
+1. Every line of useful data must have a title for program to recogniz.
+    For example:
+        maxOpT,0.5
+2. Only one type of data per row.
+3. Use ',' to split.
+    For example:
+        NP,3,8,12
+4. The order of each row of data is not important
+5. If you want to write something to explain those data, please begin with #.
+    (In fact, it ’s okay if you don’t follow the fifth item, but your input file will become more cluttered.)
+    (This behavior may bring some problem to you, while caculating.)
+6. I have set a series of default parameters, if there are something wrong in your input file,
+    program will use default parameters to caculate. If you see default at the end of some parameters, 
+    this parameter isn't import successfully.
+    (There may be situations I have not considered, causing the program to fail to report the wrong location accurately.)
+7. Only the following beginnings are currently recognized:
+    
+    maxL
+    maxOpT
+    opJ
+    parity
+    label
+    mambda
+    NP
+    potential
+    NX
+    CMRatio
+    RFMTHD
+    BE01
+    ErrorBE
+    phi

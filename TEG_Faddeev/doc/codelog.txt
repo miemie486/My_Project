@@ -1,0 +1,111 @@
+
+_
+
+commit 1eb8a99c651b1dde7270d63308f5b11c8374c59e
+
+scatlen: starts
+                                    [Mon Aug 24 19:50:58 2020
+/////////////////////////////////
+You have selected channels:
+alpha   l    s    j    lmbd I    T    lp   opT  Pi   opJ
+    0   0.0  0.0  0.0  0.0  0.5  1.0  -1.0 0.5  0.0  0.5
+    1   0.0  1.0  1.0  0.0  0.5  0.0  2.0  0.5  0.0  0.5
+   12   2.0  1.0  1.0  0.0  0.5  0.0  0.0  0.5  0.0  0.5
+/////////////////////////////////
+mambda = 400
+CTanMesh = 40
+-->initmshlg_pwo: initialized successfully
+-->kMatrix::kMatrix: CTanMesh = 40.000000
+-->kMatrix::setFacContour: phi = -10.000001
+-->kMatrix::setPotName: potName = chengdu_MMWLY_cmplx_400
+-->kMatrix::setNX: NX = 12
+-->kMatrix::setNP: NP = 170
+-->kMatrix::setNAuxMesh: NAuxMesh = 204
+-->kMatrix::setNQ: NQ = 170
+-->kMatrix::genGTable: begins
+                                    [Mon Aug 24 19:51:05 2020
+-->kMatrix::genGTable -> to alloc MEM (MB) 47.625732
+-->kMatrix::genGTable: ends
+                                    [Mon Aug 24 19:51:07 2020
+-->kMatrix::allocKMat: dimKMat = 86700
+-->kMatrix::allocKMat: about to alloc MEM (GB) 112.010390
+-->kMatrix::allocKMat: ends
+-->kMatrix::genPiArrays: begins
+-->kMatrix::genPiArrays: ends
+-->kMatrix::gen_omega_arrays: begins
+-->kMatrix::gen_omega_arrays: ends
+-->kMatrix::gen_h2wf_tNd: begins
+-->tMatrix::getChengduH2wf: H2BE = (-2.2184764,0)
+-->kMatrix::genIntzTable_Inhmgns: begins
+                                    [Mon Aug 24 19:51:45 2020
+-->kMatrix::genIntzTable_Inhmgns -> about to alloc MEM (GB) 112.010390
+-->kMatrix::genIntzTable_Inhmgns: ends
+                                    [Mon Aug 24 19:56:45 2020
+-->kMatrix::get_PInvG0: begins
+                                    [Mon Aug 24 19:56:45 2020
+-->tMatrix::getChengduH2wf: H2BE = (-2.2184764,0)
+-->tMatrix::getChengduH2wf: H2BE = (-2.2184764,0)
+-->kMatrix::get_PInvG0: ends
+                                    [Mon Aug 24 19:56:52 2020
+-->kMatrix::get_U_elastic: PinvG0 = (-2.1739458e-05,-5.6325833e-13)
+-->kMatrix::genKMat_generic: begins
+                                    [Mon Aug 24 19:56:52 2020
+-->kMatrix::genKMat_generic: ends
+                                    [Mon Aug 24 20:08:11 2020
+-->kMatrix::gen_tNd_tildeT: begins
+                                    [Mon Aug 24 20:08:11 2020
+-->kMatrix::gen_tNd_tildeT: starts to build two_body tMat
+                                    [Mon Aug 24 20:08:11 2020
+-->kMatrix::gen_tNd_tildeT: finished building two_body tMat
+                                    [Mon Aug 24 20:08:16 2020
+-->kMatrix::gen_tNd_tildeT: starts to build two_body tMat
+                                    [Mon Aug 24 20:08:16 2020
+-->kMatrix::gen_tNd_tildeT: finished building two_body tMat
+                                    [Mon Aug 24 20:08:47 2020
+-->kMatrix::gen_tNd_tildeT: starts to build two_body tMat
+                                    [Mon Aug 24 20:08:47 2020
+-->kMatrix::gen_tNd_tildeT: finished building two_body tMat
+                                    [Mon Aug 24 20:09:14 2020
+-->kMatrix::gen_tNd_tildeT: ends
+                                    [Mon Aug 24 20:09:15 2020
+-->kMatrix::gen_tilde_T: begins
+                                    [Mon Aug 24 20:09:15 2020
+---->kMatrix::gen_tilde_T: starts to call linear equation solver
+                                    [Mon Aug 24 20:09:15 2020
+---->kMatrix::gen_tilde_T: finished calling linear equation solver
+                                    [Mon Aug 24 20:26:32 2020
+-->kMatrix::gen_tilde_T: ends
+                                    [Mon Aug 24 20:26:32 2020
+-->kMatrix::gen_tNd_omega: begins
+                                    [Mon Aug 24 20:26:32 2020
+-->kMatrix::gen_tNd_omega: starts to build two_body tMat
+                                    [Mon Aug 24 20:26:32 2020
+-->kMatrix::gen_tNd_omega: finished building two_body tMat
+                                    [Mon Aug 24 20:27:17 2020
+-->kMatrix::gen_tNd_omega: starts to build two_body tMat
+                                    [Mon Aug 24 20:27:17 2020
+terminate called after throwing an instance of 'std::bad_array_new_length'
+  what():  std::bad_array_new_length
+
+
+- Sequential and threaded versions of MKL make a difference of 10^-10 MeV for B_3H
+
+Pionless benchmark provided by Sebastian Koenig
+
+* Input:
+
+a_3S1 = 5.42;
+a_1S0 = -23.714;
+
+* Regulator:
+
+g(p) = exp(-p^2/Lambda^2)
+
+V(p', p) = C g(p') g(p)
+
+* Cutoff = 1000 MeV
+* Maximum mesh momentum 3 * Cutoff = 3000 MeV
+
+* Result for triton binding energy:
+
+E = -B = 62.063313 MeV

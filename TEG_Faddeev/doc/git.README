@@ -1,0 +1,38 @@
+
+*** Unless you are a "Maintainer", you can not commit to master branch. But you can create a new branch and commit to that branch. Later, ask a maintainer to merge your branch to master.
+
+Switch to master branch
+
+$ git checkout master
+
+Create a new branch that is initially a copy of master
+
+$ git checkout -b new_branch_name
+
+After editing files, add mods
+
+$ git add mod_file
+$ git commit -m "Changed..."
+$ git push -u origin new_branch_name
+
+The last line says you're pushing a new branch that is not currently on the remote server. After this, the local branch new_branch_name and its remote counterpart are "linked". Once you are in new_branch_name locally, you can just
+
+$ git push
+
+to publish your commits, without the branch's name.
+
+*** While you work on your own branch, some changes may be committed to master by Maintainer A. For example, a bug is fixed in other parts of the code that does *not* interfere your work. You must decide whether to incorporate these changes before moving on with your own work. Normally, you should add these changes to your own branch by merging from master.
+
+# Make sure you're on your own branch, then execute the following git command:
+$ git merge master
+
+
+*** However, it is likely that the changes from master interfere the mods you are making. E.g., if the same line of the code was modified both by you and master branch, git would not know automatically which mod to choose when merging two versions. git will mark out the "conflict" in the files. You are expected to edit the files manually and write them the way you wanted. This procedure is called "resolve". Read git manual or tutorial to understand this.
+
+
+*** A few recommendations on git practice
+
+- Commit frequently so that every incremental change is small. It is easier this way to keep track of the changes you made. It will be helpful for debugging.
+
+- Merge from master from time to time. Don't wait until the very end to deal with the conflicts.
+
