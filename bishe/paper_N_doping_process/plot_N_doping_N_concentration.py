@@ -34,7 +34,7 @@ for i in range(p):
   y3.append(float(t3[i].split()[1])+10**23)
   y4.append(float(t4[i].split()[1])+10**23)
 plt.figure(1)
-plt.xlim(0,10*10**-6)
+plt.xlim(0,20*10**-6)
 plt.semilogy(x1,y1,label="1")
 #plt.semilogy(x2,y2,label="one")
 plt.legend(loc=0,ncol=1)

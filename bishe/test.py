@@ -4,14 +4,8 @@ c=12456
 @jit
 def f(x):
 
-  a=np.array([1,2,3])
-  a[2]=11
-  for i in a:
-    print(i)
-  for i in x:
-    print(i)
-  print(c)
-  return a
+  kk=c+c+c
+  return kk
 
 
 q=np.array([4,5,6])

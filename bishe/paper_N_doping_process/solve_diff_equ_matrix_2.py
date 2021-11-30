@@ -16,15 +16,15 @@ J=s*p*(1/(2*m.pi*kb*T*mass))**0.5*2
 #靠近表面那一层，在对数坐标轴的图上的斜率，主要是由化学反应速率常数影响的
 #化学反应速率越小，斜率越小
 
-k_N_1=1.5   #氮的反应速率常数
-k_N=1.5
+k_N_1=5   #氮的反应速率常数
+k_N=5
 
 #如果需要设定比较小的u_max或者较大的n_x，需要同时设定比较小的delta_t
 #要不然在左边界会出现奇异点
 
-total_t=60*2 #120 seconds
-n_t=total_t*200  #120 seconds
-n_x=400
+total_t=2*60 #120 seconds
+n_t=int(total_t*10)  #120 seconds
+n_x=200
 delta_x=thickness_a/n_x
 delta_t=total_t/n_t
 Cs=2*J*(D*120)**0.5/D
@@ -97,7 +97,9 @@ for k in range(n_t):
       k_N=0
       D=6.8*10**-14
     else:
-      print(i)
+      
+      #print(i)
+
       k_N=k_N_1
       D=6.8*10**-14
 
@@ -112,7 +114,7 @@ for k in range(n_t):
       A[i,i-1]=-alpha
       A[i,i]=1+2*alpha+k_N*delta_t/2
     #print(A_row)
-  A=np.matrix(A)
+  A=np.array(A)
 
   
   # Set matrix B
@@ -138,14 +140,16 @@ for k in range(n_t):
     J=s*p*(1/(2*m.pi*kb*T*mass))**0.5*2
     if(i==0):
       J=J*delta_x*(u_max-u[k][0])/(delta_x*u_max+D*J)
+
       print(k/10,"%.6e"%J,"%.6e"%u[k][0])
+
       B[i,0]=u[k][0]*(1-alpha)+u[k][1]*alpha+2*alpha*J*delta_x/D
     else:
       if(i==n_x-1):
         B[i,0]=alpha*u[k][i-1]+(1-2*alpha-k_N*delta_t/2)*u[k][i]
       else:
         B[i,0]=alpha*u[k][i-1]+(1-2*alpha-k_N*delta_t/2)*u[k][i]+alpha*u[k][i+1]
-  B=np.matrix(B)
+  B=np.array(B)
   result=np.linalg.solve(A,B)
   u_n=[]
 
@@ -268,10 +272,10 @@ f2.close()
 plt.figure(1)
 plt.xlim(0,30*10**-6)
 #plt.plot(x,u[120*10])
-plt.plot(x,u_6min[n_t])
+plt.semilogy(x,u_6min[n_t])
 plt.figure(2)
 plt.xlim(0,10*10**-6)
-plt.ylim(1e25,1e29)
+plt.ylim(1e23,1e29)
 plt.semilogy(x,u_6min[n_t],label="N alpha phase")
 plt.semilogy(x,u_total_N,label="N beta phase")
 plt.legend(loc=0,ncol=1)
