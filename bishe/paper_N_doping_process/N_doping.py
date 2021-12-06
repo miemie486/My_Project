@@ -4,7 +4,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from timeit import default_timer as timer
 from numba import jit
-from numpy.linalg import solve
+from numpy.core import umath
+
 
 
 thickness_a=50*10**-6
@@ -56,6 +57,12 @@ def set_matrix_A(parameters,u):        #构建矩阵A
 
         if(u[i]<=u_max_1 or u[i]>=u_max_2):
             C_N=0
+        elif(u[i]>=u_max_1 and u[i]<=10*u_max_1):
+            C_N=parameters[2]*m.log10(u[i]/u_max_1)
+            #C_N=0
+        elif(u[i]<=u_max_2 and u[i]>=0.1*u_max_2):
+            C_N=parameters[2]*m.log10(u_max_2/u[i])
+            #C_N=0
         else:
             C_N=parameters[2]
 
@@ -94,11 +101,17 @@ def set_matrix_B_and_reaction_u(parameters,u):
     B=np.zeros(N_x)
     total_u=np.zeros(N_x)
     while(i<N_x):
+
         if(u[i]<=u_max_1 or u[i]>=u_max_2):
             C_N=0
+        elif(u[i]>=u_max_1 and u[i]<=5*u_max_1):
+            C_N=parameters[2]*(u[i]-u_max_1)/u_max_1
+            #C_N=0
+        elif(u[i]<=u_max_2 and u[i]>=0.2*u_max_2):
+            C_N=parameters[2]*(u_max_2-u[i])/(0.8*u_max_2)
+            #C_N=0
         else:
             C_N=parameters[2]
-
 
         if(i==0):
             J=J_0*(u_max_2*D-u[0]*D)/(u_max_2*D+J_0*delta_x)
@@ -111,6 +124,7 @@ def set_matrix_B_and_reaction_u(parameters,u):
         total_u[i]=C_N*u[i]*delta_t
 
         i=i+1
+
     return [B,total_u]
 
 
@@ -134,6 +148,7 @@ def solve_equ(parameters,u):
         u=result_u
         total_u=total_u+B_and_reaction_u[1]
         print(i*total_t/N_t,u[0],D*(u[0]-u[1])/(thickness_a/N_x),total_u[0])
+        #print(B_and_reaction_u[0][0])
         i=i+1
     
 
@@ -150,21 +165,22 @@ if __name__ == "__main__":
 
     start = timer()
 
-    parameters=[800+273,3.3,1.5,2.79e25,2.85e27,1000,1000,1,6.8*10**-14]
+    parameters=[800+273,3.3,1.5,2.79e25,2.85e27,500,100,1,6.8*10**-14]
     parameters=np.array(parameters)
 
     result=solve_equ(parameters,u)
 
-    parameters=[800+273,3.3,1.5,2.79e25,2.85e27,1000,1200*10,1200,6.8*10**-14]
+    parameters=[800+273,3.3,1.5,2.79e25,2.85e27,500,1200*5,1200,6.8*10**-14]
     parameters=np.array(parameters)
 
     result=solve_equ(parameters,result[0])
 
-    X=np.linspace(0,thickness_a,1000)
+    X=np.linspace(0,thickness_a,500)
     plt.figure(1)
     plt.xlim(0,5*10**-6)
-    plt.semilogy(X,result[0])
-    plt.semilogy(X,result[1])
+    plt.ylim(1e23,1e28)
+    plt.semilogy(X,result[0]+1e18)
+    #plt.semilogy(X,result[1])
     print("_____________________")
     print("计算耗时：",timer()-start)
     plt.show()

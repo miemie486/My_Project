@@ -4,7 +4,7 @@ c=12456
 @jit
 def f(x):
 
-  kk=c+c+c
+  kk=[c,c,c]
   return kk
 
 
