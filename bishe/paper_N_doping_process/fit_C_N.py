@@ -47,15 +47,26 @@ if __name__ == "__main__":
     start = timer()
     data=importfile('data_800_20min.txt')
 
-    C_N=3.2
+    C_N=3.48
     N_x=400
-    total_t=20*60
-    N_t=total_t*10
+    doping_time=3*60
+    doping_N_t=doping_time*10
 
-    parameters=[800+273,3.3,C_N,2.79e25,2.46e28,N_x,N_t,total_t,6.8*10**-14]
+    parameters=[800+273,3.3,C_N,2.79e25,2.46e28,N_x,doping_N_t,doping_time,6.8*10**-14]
     parameters=np.array(parameters)
 
     u=np.zeros(N_x)
+    result=N_D.solve_equ(parameters,u)
+
+    C_N=3.48
+    N_x=400
+    annealing_time=60*60
+    annealing_N_t=annealing_time*10
+
+    parameters=[800+273,0,C_N,2.79e25,2.46e28,N_x,annealing_N_t,annealing_time,6.8*10**-14]
+    parameters=np.array(parameters)
+
+    u=result[0]
     result=N_D.solve_equ(parameters,u)
 
     X=np.linspace(0,N_D.thickness_a,400)
@@ -67,13 +78,15 @@ if __name__ == "__main__":
         i=i+1
     print(a)
     '''
-
+    np.save("data_800_3N60min_theory",result[0])
     plt.figure(1)
     plt.xlim(0,5*10**-6)
     plt.ylim(1e23,1e28)
-    plt.semilogy(X,result[0]+1e18)
-    plt.semilogy(data[0],data[1])
-    plt.show()
+    plt.semilogy(X,result[0]+1e18,label="Theory")
+    plt.semilogy(data[0],data[1],label="Experiment")
+    plt.legend(loc=0,ncol=1)
     print("计算耗时：",timer()-start)
+    plt.show()
+    
 
     #print(sum_distence_square(data[0],data[1],1.5))

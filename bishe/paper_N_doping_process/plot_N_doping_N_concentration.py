@@ -2,47 +2,45 @@ import numpy as np
 import math as m
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import N_doping as N_D
 
-f1=open("N_2min_3.3.txt")
-f2=open("N_2min_2.txt")
-f3=open("N_2min_6min.txt")
-f4=open("N_2min_6min_2.txt")
+def importfile(filename):
+    f0=open(filename)
+    f1=f0.readlines()
+    x=[]
+    y=[]
+    for i in f1:
+        t0=i.split()
+        x.append(float(t0[0])*1e-6)
+        y.append(float(t0[1])*1e6)
+    return [x,y]
 
-t1=f1.readlines()
-t2=f2.readlines()
-t3=f3.readlines()
-t4=f4.readlines()
-p=len(t1)
+#f1=np.load("data_without_transition_region\data_800_20min_theory_with_transition_regin.npy")
+#f1=np.load("data\_0min baking\data_800_3N60min_theory.npy")
+#f1=np.load("data\data_800_3N60min_theory.npy")
+f1=np.load("data\_0min baking\data_800_10N0min_theory.npy")
+#f1=np.load("data\\variable_pressure_N2A6\\data_800_2N6_min_10.0Pa_theory.npy")
+#f1=np.load("1_test_data_800_20N0min_theory.npy")
+#f1=np.load("_test_data_800_3N60min_theory.npy")
+data=importfile('data_800_20min.txt')
 
-x1=[]
-x2=[]
-x3=[]
-x4=[]
-y1=[]
-y2=[]
-y3=[]
-y4=[]
+X=np.linspace(0,N_D.thickness_a,400)
+print(np.interp(15*10**-6,X,f1))
 
-for i in range(p):
-  x1.append(float(t1[i].split()[0]))
-  x2.append(float(t2[i].split()[0]))
-  x3.append(float(t3[i].split()[0]))
-  x4.append(float(t4[i].split()[0]))
+X=X*10**6
+data[0]=np.array(data[0])*10**6
 
-  y1.append(float(t1[i].split()[1])+10**23)
-  y2.append(float(t2[i].split()[1])+10**23)
-  y3.append(float(t3[i].split()[1])+10**23)
-  y4.append(float(t4[i].split()[1])+10**23)
 plt.figure(1)
-plt.xlim(0,20*10**-6)
-plt.semilogy(x1,y1,label="1")
-#plt.semilogy(x2,y2,label="one")
+plt.xlim(0,15)
+plt.ylim(1e24,1e28)
+#plt.ylim(1e25,1e26)
+plt.tick_params(labelsize=10)
+plt.semilogy(X,f1+1e18,label="Theory_1")
+#plt.semilogy(X,f2+1e18,label="Theory_2")
+plt.semilogy(data[0],data[1],label="Experiment")
+plt.xlabel("depth, μm")
+plt.ylabel("n, atom/m$^3$")
+plt.title("800℃ 20min 3.3Pa")
 plt.legend(loc=0,ncol=1)
+#plt.show()
 
-plt.figure(2)
-plt.xlim(0,30*10**-6)
-plt.semilogy(x3,y3,label="two")
-#plt.semilogy(x4,y4,label="one")
-plt.legend(loc=0,ncol=1)
-
-plt.show()

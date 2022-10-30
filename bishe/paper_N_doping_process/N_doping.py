@@ -14,6 +14,9 @@ kb=1.38*10**-23
 mass=28*10**-3/(6.02*10**23) #氮分子质量
 
 
+concentration_ratio=3.27#4.41    #化学反应速率过渡区开始与结束点的浓度之比
+
+
 #靠近表面那一层，在对数坐标轴的图上的斜率，主要是由化学反应速率常数影响的
 #化学反应速率越小，斜率越小
 #如果需要设定比较小的u_max或者较大的n_x，需要同时设定比较小的delta_t
@@ -25,7 +28,7 @@ T:温度      默认800+273单位K
 p:氮气压强      默认3.3单位Pa
 C_N:氮气化学反应速率        没有默认，随便乱改
 u_max_1:开始生成氮化物的氮浓度      默认2.79e25
-u_max_2:氮的最高浓度        默认2.85e27
+u_max_2:氮的最高浓度        默认2.46e28 因为Nb2N的密度为8.02g/cm^3,就能算出此时的N浓度
 N_x:长度上的格子数，也是矩阵大小        默认200 
 N_t:时间上的步数        默认total_t*10
 total_t:总时间      看掺杂工艺，默认2*60_6*60工艺
@@ -55,10 +58,11 @@ def set_matrix_A(parameters,u):        #构建矩阵A
     A=np.zeros(shape=(N_x,N_x))
     while(i<N_x):
 
+        #对化学反应系数随浓度变化的修正
         if(u[i]<=u_max_1 or u[i]>=u_max_2):
             C_N=0
-        elif(u[i]>=u_max_1 and u[i]<=10*u_max_1):
-            C_N=parameters[2]*m.log10(u[i]/u_max_1)
+        elif(u[i]>=u_max_1 and u[i]<=concentration_ratio*u_max_1):
+            C_N=parameters[2]*m.log(u[i]/u_max_1)/m.log(concentration_ratio)
             #C_N=0
         elif(u[i]<=u_max_2 and u[i]>=0.1*u_max_2):
             C_N=parameters[2]*m.log10(u_max_2/u[i])
@@ -101,7 +105,7 @@ def set_matrix_B_and_reaction_u(parameters,u):
     B=np.zeros(N_x)
     total_u=np.zeros(N_x)
     while(i<N_x):
-
+        '''
         if(u[i]<=u_max_1 or u[i]>=u_max_2):
             C_N=0
         elif(u[i]>=u_max_1 and u[i]<=5*u_max_1):
@@ -112,6 +116,19 @@ def set_matrix_B_and_reaction_u(parameters,u):
             #C_N=0
         else:
             C_N=parameters[2]
+        '''
+        #对化学反应系数随浓度变化的修正
+        if(u[i]<=u_max_1 or u[i]>=u_max_2):
+            C_N=0
+        elif(u[i]>=u_max_1 and u[i]<=concentration_ratio*u_max_1):
+            C_N=parameters[2]*m.log(u[i]/u_max_1)/m.log(concentration_ratio)
+            #C_N=0
+        elif(u[i]<=u_max_2 and u[i]>=0.1*u_max_2):
+            C_N=parameters[2]*m.log10(u_max_2/u[i])
+            #C_N=0
+        else:
+            C_N=parameters[2]
+
 
         if(i==0):
             J=J_0*(u_max_2*D-u[0]*D)/(u_max_2*D+J_0*delta_x)
@@ -147,12 +164,11 @@ def solve_equ(parameters,u):
         result_u=np.linalg.solve(A,B)
         u=result_u
         total_u=total_u+B_and_reaction_u[1]
-        print(i*total_t/N_t,u[0],D*(u[0]-u[1])/(thickness_a/N_x),total_u[0])
+        #print(i*total_t/N_t,u[0],D*(u[0]-u[1])/(thickness_a/N_x),total_u[0])
         #print(B_and_reaction_u[0][0])
         i=i+1
-    
 
-    return [result_u,total_u+1e18*np.ones(N_x)+result_u]
+    return [u,total_u+1e18*np.ones(N_x)+u]
 
 if __name__ == "__main__":
     N_x=200
