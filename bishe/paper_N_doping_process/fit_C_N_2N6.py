@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     C_N=3.48
     N_x=400
-    total_t=2*60
+    total_t=5*60
     N_t=total_t*100
 
     parameters=[800+273,3.5,C_N,2.79e25,2.46e28,N_x,N_t,total_t,6.8*10**-14]
@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     result=N_D.solve_equ(parameters,result[0])
     '''
-    X=np.linspace(0,50*10**-6,400)
+    X=np.linspace(0,50*10**-6,N_x)
     
     '''
     a=0

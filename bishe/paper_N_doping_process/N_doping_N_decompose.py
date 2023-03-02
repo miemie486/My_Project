@@ -9,7 +9,7 @@ from numpy.core import umath
 
 
 thickness_a=50*10**-6
-s=0.075*0.00075
+s=0.075*0.00075*0.3
 #s=0.0001*0.075*7.5
 kb=1.38*10**-23
 mass=28*10**-3/(6.02*10**23) #氮分子质量
@@ -136,15 +136,15 @@ def set_matrix_B_and_reaction_u(parameters,u,_total_u):
 
         if(i==0):
             J=J_0*(1-_total_u[0]/u_max_2)#(u_max_2*D-u[0]*D)/(u_max_2*D+J_0*delta_x)
-            B[i]=2*alpha*J*delta_x/D+(1-C_N*delta_t/2-alpha)*u[i]+alpha*u[i+1]#+C_N*u_max_1*delta_t
+            B[i]=2*alpha*J*delta_x/D+(1-C_N*delta_t/2-alpha)*u[i]+alpha*u[i+1]+C_N*u_max_1*delta_t
         elif(i<N_x-1):
-            B[i]=alpha*u[i-1]+(1-C_N*delta_t/2-2*alpha)*u[i]+alpha*u[i+1]#+C_N*u_max_1*delta_t
+            B[i]=alpha*u[i-1]+(1-C_N*delta_t/2-2*alpha)*u[i]+alpha*u[i+1]+C_N*u_max_1*delta_t
         else:
-            B[i]=alpha*u[i-1]+(1-C_N*delta_t/2-2*alpha)*u[i]#+C_N*u_max_1*delta_t
+            B[i]=alpha*u[i-1]+(1-C_N*delta_t/2-2*alpha)*u[i]+C_N*u_max_1*delta_t
         
         reaction_u[i]=C_N*(u[i]-u_max_1)*delta_t
         if(u[i]<=u_max_1 and _total_u[i]>0):
-            B[i]=B[i]+0.01*1.03*(u_max_1-u[i])*delta_t
+            B[i]=B[i]
             #B[i]=B[i]+C_N*(u_max_1-u[i])*delta_t
             #reaction_u[i]=-1.03*(u_max_1-u[i])
 
