@@ -9,7 +9,7 @@ from numpy.core import umath
 
 
 thickness_a=50*10**-6
-s=0.075*0.00075*0.3
+s=0.075*0.00075*0.2
 #s=0.0001*0.075*7.5
 kb=1.38*10**-23
 mass=28*10**-3/(6.02*10**23) #氮分子质量
@@ -134,6 +134,12 @@ def set_matrix_B_and_reaction_u(parameters,u,_total_u):
             C_N=parameters[2]
 
 
+        #test如果totalu>umax1，u[i]固定
+        if(_total_u[i]>u_max_1 and p==0):
+            u[i]=u_max_1*0.9
+        #test如果totalu>umax1，u[i]固定
+
+
         if(i==0):
             J=J_0*(1-_total_u[0]/u_max_2)#(u_max_2*D-u[0]*D)/(u_max_2*D+J_0*delta_x)
             B[i]=2*alpha*J*delta_x/D+(1-C_N*delta_t/2-alpha)*u[i]+alpha*u[i+1]+C_N*u_max_1*delta_t
@@ -183,10 +189,10 @@ def solve_equ(parameters,u,_total_u):
     return [u,total_u]
 
 if __name__ == "__main__":
-    N_x=200
+    N_x=400
     total_t=20*60
     N_t=total_t*10
-    C_N=1
+    C_N=0.4
     parameters=[800+273,3.3,C_N,2.79e25,2.85e27,N_x,N_t,total_t,6.8*10**-14]
     parameters=np.array(parameters)
     u=np.zeros(N_x)
