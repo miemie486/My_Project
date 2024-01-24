@@ -48,9 +48,9 @@ if __name__ == "__main__":
     data=importfile('data_800_20min.txt')
 
     C_N=3.48
-    N_x=400
+    N_x=400*2
     doping_time=3*60
-    doping_N_t=doping_time*10
+    doping_N_t=doping_time*10*2
 
     parameters=[800+273,3.3,C_N,2.79e25,2.46e28,N_x,doping_N_t,doping_time,6.8*10**-14]
     parameters=np.array(parameters)
@@ -59,9 +59,9 @@ if __name__ == "__main__":
     result=N_D.solve_equ(parameters,u)
 
     C_N=3.48
-    N_x=400
+    N_x=400*2
     annealing_time=60*60
-    annealing_N_t=annealing_time*10
+    annealing_N_t=annealing_time*10*2
 
     parameters=[800+273,0,C_N,2.79e25,2.46e28,N_x,annealing_N_t,annealing_time,6.8*10**-14]
     parameters=np.array(parameters)
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     u=result[0]
     result=N_D.solve_equ(parameters,u)
 
-    X=np.linspace(0,N_D.thickness_a,400)
+    X=np.linspace(0,N_D.thickness_a,N_x)
     '''
     a=0
     i=0

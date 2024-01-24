@@ -47,9 +47,9 @@ if __name__ == "__main__":
     start = timer()
     data=importfile('data_800_20min.txt')
 
-    C_N=5.03*10
+    C_N=5.03*5
     N_x=400
-    doping_time=20*60
+    doping_time=2*60
     doping_N_t=doping_time*10
 
     parameters=[800+273,3.3,C_N,2.79e25,2.46e28,N_x,doping_N_t,doping_time,6.8*10**-14]
@@ -60,9 +60,9 @@ if __name__ == "__main__":
     result=N_D.solve_equ(parameters,u,total_u)
     
     
-    C_N=1.03
+    C_N=5.03*5
     N_x=400
-    annealing_time=1
+    annealing_time=10*20
     annealing_N_t=annealing_time*10
 
     parameters=[800+273,0,C_N,2.79e25,2.46e28,N_x,annealing_N_t,annealing_time,6.8*10**-14]
