@@ -70,7 +70,6 @@ def crossover(pop):
     # 转换为numpy.array
     new_pop = np.array(new_pop)
     return new_pop
-
 # 变异操作
 def mutate(pop):
     for i in range(len(pop)):
